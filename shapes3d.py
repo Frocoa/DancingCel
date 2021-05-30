@@ -28,51 +28,11 @@ def createScene(pipeline):
     # Se crea la escena base
 
     # Se crean las shapes en GPU
-    gpuRedCube = createGPUShape(pipeline, bs.createColorNormalsCube(1, 0, 0)) # Shape del cubo rojo
-    gpuGreenCube = createGPUShape(pipeline, bs.createColorNormalsCube(0, 1, 0)) # Shape del cubo verde
-    gpuGrayCube = createGPUShape(pipeline, bs.createColorNormalsCube(0.7, 0.7, 0.7)) # Shape del cubo gris
-    gpuWhiteCube = createGPUShape(pipeline, bs.createColorNormalsCube(1, 1, 1)) # Shape del cubo blanco
-
-    # Nodo del cubo rojo
-    redCubeNode = sg.SceneGraphNode("redCube")
-    redCubeNode.childs = [gpuRedCube]
-
-    # Nodo del cubo verde
-    greenCubeNode = sg.SceneGraphNode("greenCube")
-    greenCubeNode.childs = [gpuGreenCube]
+    gpuGrayCube = createGPUShape(pipeline, bs.createColorNormalsCube(0.5,0.4,0.4)) # Shape del cubo gris
 
     # Nodo del cubo gris
     grayCubeNode = sg.SceneGraphNode("grayCube")
     grayCubeNode.childs = [gpuGrayCube]
-
-    # Nodo del cubo blanco
-    whiteCubeNode = sg.SceneGraphNode("whiteCube")
-    whiteCubeNode.childs = [gpuWhiteCube]
-    
-    # Nodo de la pared derecha de color rojo
-    rightWallNode = sg.SceneGraphNode("rightWall")
-    rightWallNode.transform = tr.translate(1, 0, 0)
-    rightWallNode.childs = [redCubeNode]
-
-    # Nodo de la pared izquierda de color verde
-    leftWallNode = sg.SceneGraphNode("leftWall")
-    leftWallNode.transform = tr.translate(-1, 0, 0)
-    leftWallNode.childs = [greenCubeNode]
-
-    # Nodo de la pared de fondo de color gris
-    backWallNode = sg.SceneGraphNode("backWall")
-    backWallNode.transform = tr.translate(0,-1, 0)
-    backWallNode.childs = [grayCubeNode]
-
-    # Nodo del cubo que representa la fuente de luz (no genera la iluminacion)
-    lightNode = sg.SceneGraphNode("lightSource")
-    lightNode.transform = tr.matmul([tr.translate(0, 0, -0.4), tr.scale(0.12, 0.12, 0.12)])
-    lightNode.childs = [grayCubeNode]
-
-    # Nodo del cielo del techo de color gris
-    ceilNode = sg.SceneGraphNode("ceil")
-    ceilNode.transform = tr.translate(0, 0, 1)
-    ceilNode.childs = [grayCubeNode, lightNode]
 
     # Nodo del suelo de color gris
     floorNode = sg.SceneGraphNode("floor")
@@ -82,7 +42,7 @@ def createScene(pipeline):
     # Nodo de la escena para realizar un escalamiento
     sceneNode = sg.SceneGraphNode("scene")
     sceneNode.transform = tr.matmul([tr.translate(0, 0, 0), tr.scale(5, 5, 5)])
-    sceneNode.childs = [rightWallNode, leftWallNode, backWallNode, ceilNode, floorNode]
+    sceneNode.childs = [floorNode]
 
     # Nodo final de la escena 
     trSceneNode = sg.SceneGraphNode("tr_scene")

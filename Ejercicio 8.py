@@ -139,7 +139,7 @@ if __name__ == "__main__":
 
     width = 800
     height = 800
-    title = "P0 - Scene"
+    title = "Cel Dance"
 
     window = glfw.create_window(width, height, title, None, None)
 
@@ -168,9 +168,6 @@ if __name__ == "__main__":
     # and which one is at the back
     glEnable(GL_DEPTH_TEST)
 
-    # Creating shapes on GPU memory
-    gpuAxis = createGPUShape(mvpPipeline, bs.createAxis(4))
-
     scene = createScene(phongPipeline)
     toro1 = createToroNode(0.7, 0.6, 0.4, phongPipeline)
     tex_toro = createTexToroNode(phongTexPipeline)
@@ -197,10 +194,6 @@ if __name__ == "__main__":
         variacion = t1 - t_inicial
         colorVec = colormat[colorIndex]
 
-        if variacion >= 4.0:
-        	colorIndex = (colorIndex+1)%3
-        	t_inicial = t1
-
         # Using GLFW to check for input events
         glfw.poll_events()
 
@@ -219,14 +212,6 @@ if __name__ == "__main__":
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
         else:
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-
-        # The axis is drawn without lighting effects
-        if controller.showAxis:
-            glUseProgram(mvpPipeline.shaderProgram)
-            glUniformMatrix4fv(glGetUniformLocation(mvpPipeline.shaderProgram, "projection"), 1, GL_TRUE, projection)
-            glUniformMatrix4fv(glGetUniformLocation(mvpPipeline.shaderProgram, "view"), 1, GL_TRUE, viewMatrix)
-            glUniformMatrix4fv(glGetUniformLocation(mvpPipeline.shaderProgram, "model"), 1, GL_TRUE, tr.identity())
-            mvpPipeline.drawCall(gpuAxis, GL_LINES)
 
         lightingPipeline = phongPipeline
         lightingPipeline = phongSpotPipeline
@@ -258,34 +243,9 @@ if __name__ == "__main__":
         sg.drawSceneGraphNode(toro1, lightingPipeline, "model",100,0.05)
         
 
-        # Se dibuja con el pipeline de texturas
-        glUseProgram(phongTexPipeline.shaderProgram)
-        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "La"), colorVec[0]*0.25, colorVec[1]*0.25, colorVec[2]*0.25)
-        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Ld"), colorVec[0]*0.5, colorVec[1]*0.5, colorVec[2]*0.5)
-        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Ls"), colorVec[0], colorVec[1], colorVec[2])
-
-        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Ka"), colorVec[0]*0.2, colorVec[1]*0.2, colorVec[2]*0.2)
-        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Kd"), colorVec[0]*0.5, colorVec[1]*0.5, colorVec[2]*0.5)
-        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Ks"), colorVec[0], colorVec[1], colorVec[2])
-
-        # Ya no se necesita la posicion de la fuentes de lus, se declaran constantes en los shaders
-        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "viewPosition"), camera.eye[0], camera.eye[1], camera.eye[2])
-        glUniform1ui(glGetUniformLocation(phongTexPipeline.shaderProgram, "shininess"), 100)
-        
-        glUniform1f(glGetUniformLocation(phongTexPipeline.shaderProgram, "constantAttenuation"), 0.001)
-        glUniform1f(glGetUniformLocation(phongTexPipeline.shaderProgram, "linearAttenuation"), 0.03)
-        glUniform1f(glGetUniformLocation(phongTexPipeline.shaderProgram, "quadraticAttenuation"), 0.01)
-
-        glUniformMatrix4fv(glGetUniformLocation(phongTexPipeline.shaderProgram, "projection"), 1, GL_TRUE, projection)
-        glUniformMatrix4fv(glGetUniformLocation(phongTexPipeline.shaderProgram, "view"), 1, GL_TRUE, viewMatrix)
-
-        sg.drawSceneGraphNode(tex_toro, phongTexPipeline, "model", 50,0.05)
-        
-        
         # Once the drawing is rendered, buffers are swap so an uncomplete drawing is never seen.
         glfw.swap_buffers(window)
 
-    gpuAxis.clear()
     scene.clear()
     toro1.clear()
     tex_toro.clear()

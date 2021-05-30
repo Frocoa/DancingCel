@@ -450,6 +450,8 @@ class MultiplePhongSpotShaderProgram:
             uniform float linearAttenuation;
             uniform float quadraticAttenuation;
 
+            const int levels = 2;
+
             void main()
             {
                 // ambient
@@ -474,19 +476,25 @@ class MultiplePhongSpotShaderProgram:
                     // Lo demas es exactamente igual
                     vec3 lightDir = normalize(toLight);
                     float diff = max(dot(normalizedNormal, lightDir), 0.0);
+                    float level = floor(diff*levels);
+                    diff = level/levels;
                     vec3 diffuse = Kd * Ld * diff;
                     
                     // specular
                     vec3 viewDir = normalize(viewPosition - fragPosition);
                     vec3 reflectDir = reflect(-lightDir, normalizedNormal);  
                     float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+                    level = floor(spec*levels);
+                    spec = level/levels;
                     vec3 specular = Ks * Ls * spec;
 
                     // attenuation
                     vec3 spotDir = vec3(0,0,1);
                     vec3 L = normalize(-toLight);
-                    float concentration = 30;
+                    float concentration = 20;
                     float numerador = pow(max(dot(-spotDir, L), 0.0), concentration);
+                    level = floor(numerador*levels);
+                    numerador = level/levels;
 
                     float distToLight = length(toLight);
                     float denominador = constantAttenuation
