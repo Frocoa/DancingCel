@@ -28,7 +28,7 @@ def createScene(pipeline):
     # Se crea la escena base
 
     # Se crean las shapes en GPU
-    gpuGrayCube = createGPUShape(pipeline, bs.createColorNormalsCube(0.5,0.4,0.4)) # Shape del cubo gris
+    gpuGrayCube = createGPUShape(pipeline, bs.createColorNormalsCube(1.0,0.7,0.7)) # Shape del cubo gris
 
     # Nodo del cubo gris
     grayCubeNode = sg.SceneGraphNode("grayCube")
@@ -41,7 +41,7 @@ def createScene(pipeline):
 
     # Nodo de la escena para realizar un escalamiento
     sceneNode = sg.SceneGraphNode("scene")
-    sceneNode.transform = tr.matmul([tr.translate(0, 0, 0), tr.scale(5, 5, 5)])
+    sceneNode.transform = tr.matmul([tr.translate(0, 0, -1.5), tr.scale(5, 5, 1)])
     sceneNode.childs = [floorNode]
 
     # Nodo final de la escena 
@@ -154,6 +154,37 @@ def createColorNormalToro(N, r, g, b):
             indices += [ c + 2, c + 3, c + 0 ]
             c += 4
     return bs.Shape(vertices, indices)
+
+def createTextureNormalPlane():  
+    # Defining locations and texture coordinates for each vertex of the shape    
+    vertices = [
+    #   positions        texture   normales
+        -0.5,  0.0, -0.5,  0, 1,   0, -1, 0,
+         0.5,  0.0, -0.5,  1, 1,   0, -1, 0,
+         0.5,  0.0,  0.5,  1, 0,   0, -1, 0,
+        -0.5,  0.0,  0.5,  0, 0,   0, -1, 0]
+
+    # Defining connections among vertices
+    # We have a triangle every 3 indices specified
+    indices = [
+         0, 1, 2,
+         2, 3, 0]
+
+    return bs.Shape(vertices, indices)
+
+def createTexPlaneNode(pipeline):
+    plane = createTextureGPUShape(createTextureNormalPlane(), pipeline, "assets/barras.png")
+
+    # Nodo del toroide trasladado y escalado
+    planeNode = sg.SceneGraphNode("plane")
+    planeNode.transform =tr.matmul([
+        tr.translate(0.25,4,-0.35),
+        tr.scale(1.0,1.0,1.0),
+        tr.rotationX(0.2)
+    ])
+    planeNode.childs = [plane]
+
+    return planeNode
 
 def createTextureNormalToroide(N):
     # Funcion para crear un toroide con normales y textura

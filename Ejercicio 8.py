@@ -171,6 +171,7 @@ if __name__ == "__main__":
     scene = createScene(phongPipeline)
     toro1 = createToroNode(0.7, 0.6, 0.4, phongPipeline)
     tex_toro = createTexToroNode(phongTexPipeline)
+    plane = createTexPlaneNode(phongTexPipeline)
 
     					  #Color         
     colormat = np.array([[1.0,1.0,1.0,],
@@ -214,7 +215,7 @@ if __name__ == "__main__":
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
 
         lightingPipeline = phongPipeline
-        lightingPipeline = phongSpotPipeline
+        #lightingPipeline = phongSpotPipeline
 
         # Setting all uniform shader variables
         
@@ -241,6 +242,34 @@ if __name__ == "__main__":
         # Drawing
         sg.drawSceneGraphNode(scene, lightingPipeline, "model",20)
         sg.drawSceneGraphNode(toro1, lightingPipeline, "model",100,0.05)
+        
+
+        # Se dibuja con el pipeline de texturas
+        glUseProgram(phongTexPipeline.shaderProgram)
+        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "La"), colorVec[0]*0.25, colorVec[1]*0.25, colorVec[2]*0.25)
+        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Ld"), colorVec[0]*0.5, colorVec[1]*0.5, colorVec[2]*0.5)
+        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Ls"), colorVec[0], colorVec[1], colorVec[2])
+
+        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Ka"), colorVec[0]*0.2, colorVec[1]*0.2, colorVec[2]*0.2)
+        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Kd"), colorVec[0]*0.5, colorVec[1]*0.5, colorVec[2]*0.5)
+        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Ks"), colorVec[0], colorVec[1], colorVec[2])
+
+        # Ya no se necesita la posicion de la fuentes de lus, se declaran constantes en los shaders
+        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "viewPosition"), camera.eye[0], camera.eye[1], camera.eye[2])
+        glUniform1ui(glGetUniformLocation(phongTexPipeline.shaderProgram, "shininess"), 100)
+        
+        glUniform1f(glGetUniformLocation(phongTexPipeline.shaderProgram, "constantAttenuation"), 0.001)
+        glUniform1f(glGetUniformLocation(phongTexPipeline.shaderProgram, "linearAttenuation"), 0.03)
+        glUniform1f(glGetUniformLocation(phongTexPipeline.shaderProgram, "quadraticAttenuation"), 0.01)
+
+        glUniformMatrix4fv(glGetUniformLocation(phongTexPipeline.shaderProgram, "projection"), 1, GL_TRUE, projection)
+        glUniformMatrix4fv(glGetUniformLocation(phongTexPipeline.shaderProgram, "view"), 1, GL_TRUE, viewMatrix)
+
+        sg.drawSceneGraphNode(tex_toro, phongTexPipeline, "model", 50,0.05)
+
+        glUniformMatrix4fv(glGetUniformLocation(phongTexPipeline.shaderProgram, "transform"))
+        sg.drawSceneGraphNode(plane, phongTexPipeline, "model")
+        
         
 
         # Once the drawing is rendered, buffers are swap so an uncomplete drawing is never seen.
