@@ -7,6 +7,8 @@ import grafica.basic_shapes as bs
 import grafica.easy_shaders as es
 import grafica.transformations as tr
 import grafica.scene_graph as sg
+from gameobject import GameObject 
+import newLightShaders as nl
 
 def createGPUShape(pipeline, shape):
      # Funcion Conveniente para facilitar la inicializacion de un GPUShape
@@ -23,6 +25,7 @@ def createTextureGPUShape(shape, pipeline, path):
     gpuShape.texture = es.textureSimpleSetup(
         path, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST)
     return gpuShape
+
 
 def createScene(pipeline):
     # Se crea la escena base

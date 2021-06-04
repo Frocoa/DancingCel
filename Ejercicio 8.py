@@ -12,7 +12,6 @@ import grafica.lighting_shaders as ls
 import grafica.scene_graph as sg
 from shapes3d import *
 import newLightShaders as nl
-
 # Clase para manejar una camara que se mueve en coordenadas polares
 class PolarCamera:
     def __init__(self):
@@ -186,6 +185,9 @@ if __name__ == "__main__":
     t0 = glfw.get_time()
     t_inicial = glfw.get_time()
 
+
+    plane1 = GameObject("planito", createTextureGPUShape(createTextureNormalPlane(), phongTexPipeline, "assets/barras.png"), phongTexPipeline)
+
     # Application loop
     while not glfw.window_should_close(window):
         # Variables del tiempo
@@ -243,7 +245,6 @@ if __name__ == "__main__":
         sg.drawSceneGraphNode(scene, lightingPipeline, "model",20)
         sg.drawSceneGraphNode(toro1, lightingPipeline, "model",100,0.05)
         
-
         # Se dibuja con el pipeline de texturas
         glUseProgram(phongTexPipeline.shaderProgram)
         glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "La"), colorVec[0]*0.25, colorVec[1]*0.25, colorVec[2]*0.25)
@@ -266,9 +267,7 @@ if __name__ == "__main__":
         glUniformMatrix4fv(glGetUniformLocation(phongTexPipeline.shaderProgram, "view"), 1, GL_TRUE, viewMatrix)
 
         sg.drawSceneGraphNode(tex_toro, phongTexPipeline, "model", 50,0.05)
-
-        glUniformMatrix4fv(glGetUniformLocation(phongTexPipeline.shaderProgram, "transform"))
-        sg.drawSceneGraphNode(plane, phongTexPipeline, "model")
+        plane1.update(delta)
         
         
 
@@ -278,5 +277,6 @@ if __name__ == "__main__":
     scene.clear()
     toro1.clear()
     tex_toro.clear()
+    plane1.modelo.clear()
 
     glfw.terminate()
