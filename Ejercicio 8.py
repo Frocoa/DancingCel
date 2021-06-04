@@ -54,10 +54,10 @@ class Controller:
         self.showAxis = True
 
         # Variables para controlar la camara
-        self.is_up_pressed = False
-        self.is_down_pressed = False
-        self.is_left_pressed = False
-        self.is_right_pressed = False
+        self.is_w_pressed = False
+        self.is_s_pressed = False
+        self.is_a_pressed = False
+        self.is_d_pressed = False
 
         # Se crea instancia de la camara
         self.polar_camera = PolarCamera()
@@ -72,30 +72,30 @@ class Controller:
         # Caso de detectar la tecla [UP], actualiza estado de variable
         if key == glfw.KEY_UP:
             if action == glfw.PRESS:
-                self.is_up_pressed = True
+                self.is_w_pressed = True
             elif action == glfw.RELEASE:
-                self.is_up_pressed = False
+                self.is_w_pressed = False
 
         # Caso de detectar la tecla [DOWN], actualiza estado de variable
         if key == glfw.KEY_DOWN:
             if action == glfw.PRESS:
-                self.is_down_pressed = True
+                self.is_s_pressed = True
             elif action == glfw.RELEASE:
-                self.is_down_pressed = False
+                self.is_s_pressed = False
 
         # Caso de detectar la tecla [RIGHT], actualiza estado de variable
         if key == glfw.KEY_RIGHT:
             if action == glfw.PRESS:
-                self.is_right_pressed = True
+                self.is_d_pressed = True
             elif action == glfw.RELEASE:
-                self.is_right_pressed = False
+                self.is_d_pressed = False
 
         # Caso de detectar la tecla [LEFT], actualiza estado de variable
         if key == glfw.KEY_LEFT:
             if action == glfw.PRESS:
-                self.is_left_pressed = True
+                self.is_a_pressed = True
             elif action == glfw.RELEASE:
-                self.is_left_pressed = False
+                self.is_a_pressed = False
         
         # Caso de detectar la barra espaciadora, se cambia el metodo de dibujo
         if key == glfw.KEY_SPACE:
@@ -115,19 +115,19 @@ class Controller:
     #Funcion que recibe el input para manejar la camara y controlar sus coordenadas
     def update_camera(self, delta):
         # Camara rota a la izquierda
-        if self.is_left_pressed:
+        if self.is_a_pressed:
             self.polar_camera.set_theta(-2 * delta)
 
         # Camara rota a la derecha
-        if self.is_right_pressed:
+        if self.is_d_pressed:
             self.polar_camera.set_theta( 2 * delta)
         
         # Camara se acerca al centro
-        if self.is_up_pressed:
+        if self.is_w_pressed:
             self.polar_camera.set_rho(-5 * delta)
 
         # Camara se aleja del centro
-        if self.is_down_pressed:
+        if self.is_s_pressed:
             self.polar_camera.set_rho(5 * delta)
 
 if __name__ == "__main__":
@@ -167,18 +167,16 @@ if __name__ == "__main__":
     # and which one is at the back
     glEnable(GL_DEPTH_TEST)
 
-    scene = createScene(phongPipeline)
+    scene = GameObject("escena", phongPipeline)
+    scene.addChilds(sceneChilds(phongPipeline))
+
     toro1 = createToroNode(0.7, 0.6, 0.4, phongPipeline)
-    tex_toro = createTexToroNode(phongTexPipeline)
-    plane = createTexPlaneNode(phongTexPipeline)
 
-    					  #Color         
-    colormat = np.array([[1.0,1.0,1.0,],
-    					 [0.0,1.0,1.0,],
-    					 [1.0,1.0,0.0,]])
-
-    colorIndex = 0
-
+    tex_toro = GameObject("tex toro", phongTexPipeline)
+    tex_toro.setModel(createTextureGPUShape(createTextureNormalToroide(20), phongTexPipeline, "assets/barras.png"))
+    plane1 = GameObject("planito", phongTexPipeline)
+    plane1.setModel(createTextureGPUShape(createTextureNormalPlane(), phongTexPipeline, "assets/barras.png"))
+      
     perfMonitor = pm.PerformanceMonitor(glfw.get_time(), 0.5)
     # glfw will swap buffers as soon as possible
     glfw.swap_interval(0)
@@ -186,7 +184,7 @@ if __name__ == "__main__":
     t_inicial = glfw.get_time()
 
 
-    plane1 = GameObject("planito", createTextureGPUShape(createTextureNormalPlane(), phongTexPipeline, "assets/barras.png"), phongTexPipeline)
+    
 
     # Application loop
     while not glfw.window_should_close(window):
@@ -195,7 +193,6 @@ if __name__ == "__main__":
         delta = t1 -t0
         t0 = t1
         variacion = t1 - t_inicial
-        colorVec = colormat[colorIndex]
 
         # Using GLFW to check for input events
         glfw.poll_events()
@@ -222,13 +219,13 @@ if __name__ == "__main__":
         # Setting all uniform shader variables
         
         glUseProgram(lightingPipeline.shaderProgram)
-        glUniform3f(glGetUniformLocation(lightingPipeline.shaderProgram, "La"), colorVec[0]*0.25, colorVec[1]*0.25, colorVec[2]*0.25)
-        glUniform3f(glGetUniformLocation(lightingPipeline.shaderProgram, "Ld"), colorVec[0]*0.5, colorVec[1]*0.5, colorVec[2]*0.5)
-        glUniform3f(glGetUniformLocation(lightingPipeline.shaderProgram, "Ls"), colorVec[0], colorVec[1], colorVec[2])
+        glUniform3f(glGetUniformLocation(lightingPipeline.shaderProgram, "La"), 0.25, 0.25, 0.25)
+        glUniform3f(glGetUniformLocation(lightingPipeline.shaderProgram, "Ld"), 0.5, 0.5, 0.5)
+        glUniform3f(glGetUniformLocation(lightingPipeline.shaderProgram, "Ls"), 1.0, 1.0, 1.0)
 
-        glUniform3f(glGetUniformLocation(lightingPipeline.shaderProgram, "Ka"), colorVec[0]*0.2, colorVec[1]*0.2, colorVec[2]*0.2)
-        glUniform3f(glGetUniformLocation(lightingPipeline.shaderProgram, "Kd"), colorVec[0]*0.5, colorVec[1]*0.5, colorVec[2]*0.5)
-        glUniform3f(glGetUniformLocation(lightingPipeline.shaderProgram, "Ks"), colorVec[0], colorVec[1], colorVec[2])
+        glUniform3f(glGetUniformLocation(lightingPipeline.shaderProgram, "Ka"), 0.2, 0.2, 0.2)
+        glUniform3f(glGetUniformLocation(lightingPipeline.shaderProgram, "Kd"), 0.5, 0.5, 0.5)
+        glUniform3f(glGetUniformLocation(lightingPipeline.shaderProgram, "Ks"), 1.0, 1.0, 1.0)
 
         # Ya no se necesita la posicion de la fuentes de luz, se declaran constantes en los shaders
         glUniform3f(glGetUniformLocation(lightingPipeline.shaderProgram, "viewPosition"), camera.eye[0], camera.eye[1], camera.eye[2])
@@ -242,18 +239,19 @@ if __name__ == "__main__":
         glUniformMatrix4fv(glGetUniformLocation(lightingPipeline.shaderProgram, "view"), 1, GL_TRUE, viewMatrix)
 
         # Drawing
-        sg.drawSceneGraphNode(scene, lightingPipeline, "model",20)
-        sg.drawSceneGraphNode(toro1, lightingPipeline, "model",100,0.05)
+        sg.drawSceneGraphNode(scene.nodo, lightingPipeline, "model",20)
+        #scene.update(delta)
+        #sg.drawSceneGraphNode(toro1, lightingPipeline, "model",100,0.05)
         
         # Se dibuja con el pipeline de texturas
         glUseProgram(phongTexPipeline.shaderProgram)
-        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "La"), colorVec[0]*0.25, colorVec[1]*0.25, colorVec[2]*0.25)
-        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Ld"), colorVec[0]*0.5, colorVec[1]*0.5, colorVec[2]*0.5)
-        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Ls"), colorVec[0], colorVec[1], colorVec[2])
+        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "La"), 0.25, 0.25, 0.25)
+        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Ld"), 0.5, 0.5, 0.5)
+        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Ls"), 1.0, 1.0, 1.0)
 
-        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Ka"), colorVec[0]*0.2, colorVec[1]*0.2, colorVec[2]*0.2)
-        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Kd"), colorVec[0]*0.5, colorVec[1]*0.5, colorVec[2]*0.5)
-        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Ks"), colorVec[0], colorVec[1], colorVec[2])
+        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Ka"), 0.2, 0.2, 0.2)
+        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Kd"), 0.5, 0.5, 0.5)
+        glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "Ks"), 1.0, 1.0, 1.0)
 
         # Ya no se necesita la posicion de la fuentes de lus, se declaran constantes en los shaders
         glUniform3f(glGetUniformLocation(phongTexPipeline.shaderProgram, "viewPosition"), camera.eye[0], camera.eye[1], camera.eye[2])
@@ -266,8 +264,8 @@ if __name__ == "__main__":
         glUniformMatrix4fv(glGetUniformLocation(phongTexPipeline.shaderProgram, "projection"), 1, GL_TRUE, projection)
         glUniformMatrix4fv(glGetUniformLocation(phongTexPipeline.shaderProgram, "view"), 1, GL_TRUE, viewMatrix)
 
-        sg.drawSceneGraphNode(tex_toro, phongTexPipeline, "model", 50,0.05)
         plane1.update(delta)
+        tex_toro.update(delta)
         
         
 
@@ -277,6 +275,6 @@ if __name__ == "__main__":
     scene.clear()
     toro1.clear()
     tex_toro.clear()
-    plane1.modelo.clear()
+    plane1.clear()
 
     glfw.terminate()

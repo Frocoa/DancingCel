@@ -27,7 +27,7 @@ def createTextureGPUShape(shape, pipeline, path):
     return gpuShape
 
 
-def createScene(pipeline):
+def sceneChilds(pipeline):
     # Se crea la escena base
 
     # Se crean las shapes en GPU
@@ -51,7 +51,7 @@ def createScene(pipeline):
     trSceneNode = sg.SceneGraphNode("tr_scene")
     trSceneNode.childs = [sceneNode]
 
-    return trSceneNode
+    return trSceneNode.childs
 
 def createCube1(pipeline):
     # Funcion para crear Grafo de un objeto de la escena, se separa en otro grafo, por si se quiere dibujar con otro material
