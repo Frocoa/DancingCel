@@ -1,4 +1,5 @@
 import glfw
+import math
 import OpenGL.GL.shaders
 import numpy as np
 import grafica.basic_shapes as bs
@@ -55,12 +56,23 @@ if __name__ == "__main__":
     camera = Camera(controller)
 
     scene = GameObject("escena", phongPipeline)
-    scene.addChilds(sceneChilds(phongPipeline))
+    scene.nodeAddChilds(sceneChilds(phongPipeline))
 
-    neck = GameObject("neck", phongPipeline)
-    neckMesh = mh.createNeckMesh()
-    neck.setModel(createGPUShape(phongPipeline, mh.toShape(neckMesh, color=(0.6, 0.1, 0.1))))
-    neck.translate([0, 0, -1.4])
+    bodyMesh = mh.createBodyMesh()
+    body = GameObject("body", phongPipeline)
+    body.setModel(createGPUShape(phongPipeline, mh.toShape(bodyMesh, color=(0.6, 0.1, 0.1))))
+
+    tailMesh = mh.createTailMesh()
+    tail1 = GameObject("tail1", phongPipeline)
+    tail1.setModel(createGPUShape(phongPipeline, mh.toShape(tailMesh, color=(0.6, 0.1, 0.1))))
+    tail1.setPosition([0, 0, -1])
+
+    tail2 = GameObject("tail2", phongPipeline)
+    tail2.setModel(createGPUShape(phongPipeline, mh.toShape(tailMesh, color=(0.6, 0.1, 0.1))))
+
+    tail = GameObject("tail", phongPipeline)
+    tail.addChilds([tail1, tail2])
+    tail.setPosition([0,0,0.5])
 
     tex_toro = GameObject("tex toro", phongTexPipeline)
     tex_toro.setModel(createTextureGPUShape(createTextureNormalToroide(20), phongTexPipeline, "assets/barras.png"))
@@ -112,11 +124,16 @@ if __name__ == "__main__":
         # se envian los uniforms asociados a la iluminacion
         lh.setShaderUniforms(lightingPipeline, camera, projection, viewMatrix)
         scene.update(delta)
-        neck.update(delta)
+
+        
+        tail2.setRotation([0, math.cos(t1*10)*5, 0])
+        tail.translate([delta*0.5,0,0])
+        tail.update(delta)
+        body.update(delta)
+
 
         # se envian los uniforms asociados a la iluminacion con texturas
         lh.setShaderUniforms(phongTexPipeline, camera, projection, viewMatrix)
-        plane1.update(delta/2)
         #tex_toro.update(delta)
         
         # Once the drawing is rendered, buffers are swap so an uncomplete drawing is never seen.

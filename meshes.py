@@ -2,56 +2,125 @@ import openmesh
 import numpy as np
 import grafica.basic_shapes as bs
 
-def createNeckMesh(textured=False):
+def createTailMesh(textured=False):
 
-    mesh = openmesh.TriMesh()
+	mesh = openmesh.TriMesh()
 
-    d1 = mesh.add_vertex(np.array([  0.5,   0.0,  -1.0]))
-    d2 = mesh.add_vertex(np.array([ 0.25, -0.433, -1.0]))
-    d3 = mesh.add_vertex(np.array([-0.25, -0.433, -1.0]))
-    d4 = mesh.add_vertex(np.array([ -0.5,    0.0, -1.0]))
-    d5 = mesh.add_vertex(np.array([-0.25,  0.433, -1.0]))
-    d6 = mesh.add_vertex(np.array([ 0.25,  0.433, -1.0])) 
+	d1 = mesh.add_vertex(np.array([  0.5,   0.0,  -1.0]))
+	d2 = mesh.add_vertex(np.array([ 0.25, -0.433, -1.0]))
+	d3 = mesh.add_vertex(np.array([-0.25, -0.433, -1.0]))
+	d4 = mesh.add_vertex(np.array([ -0.5,    0.0, -1.0]))
+	d5 = mesh.add_vertex(np.array([-0.25,  0.433, -1.0]))
+	d6 = mesh.add_vertex(np.array([ 0.25,  0.433, -1.0])) 
 
-    u1 = mesh.add_vertex(np.array([  0.3,   0.0,  1.0]))
-    u2 = mesh.add_vertex(np.array([ 0.15, -0.259, 1.0]))
-    u3 = mesh.add_vertex(np.array([-0.15, -0.259, 1.0]))
-    u4 = mesh.add_vertex(np.array([ -0.3,    0.0, 1.0]))
-    u5 = mesh.add_vertex(np.array([-0.15,  0.259, 1.0]))
-    u6 = mesh.add_vertex(np.array([ 0.15,  0.259, 1.0])) 
+	u1 = mesh.add_vertex(np.array([  0.3,   0.0,  1.0]))
+	u2 = mesh.add_vertex(np.array([ 0.15, -0.259, 1.0]))
+	u3 = mesh.add_vertex(np.array([-0.15, -0.259, 1.0]))
+	u4 = mesh.add_vertex(np.array([ -0.3,    0.0, 1.0]))
+	u5 = mesh.add_vertex(np.array([-0.15,  0.259, 1.0]))
+	u6 = mesh.add_vertex(np.array([ 0.15,  0.259, 1.0])) 
 
-    # tapa de abajo
-    mesh.add_face([d2, d3 ,d1])
-    mesh.add_face([d1, d3, d4])
-    mesh.add_face([d1, d4, d6])
-    mesh.add_face([d6, d4, d5])
+	# tapa de abajo
+	mesh.add_face([d2, d3 ,d1])
+	mesh.add_face([d1, d3, d4])
+	mesh.add_face([d1, d4, d6])
+	mesh.add_face([d6, d4, d5])
 
-    # laterales
-    mesh.add_face([d1, u1, u2])
-    mesh.add_face([u2, d2, d1])
+	# laterales
+	mesh.add_face([d1, u1, u2])
+	mesh.add_face([u2, d2, d1])
 
-    mesh.add_face([d2, u2, u3])
-    mesh.add_face([u3, d3, d2])
+	mesh.add_face([d2, u2, u3])
+	mesh.add_face([u3, d3, d2])
 
-    mesh.add_face([d3, u3, u4])
-    mesh.add_face([u4, d4, d3])
+	mesh.add_face([d3, u3, u4])
+	mesh.add_face([u4, d4, d3])
 
-    mesh.add_face([d4, u4, u5])
-    mesh.add_face([u5, d5, d4])
+	mesh.add_face([d4, u4, u5])
+	mesh.add_face([u5, d5, d4])
 
-    mesh.add_face([d5, u5, u6])
-    mesh.add_face([u6, d6, d5])
+	mesh.add_face([d5, u5, u6])
+	mesh.add_face([u6, d6, d5])
 
-    mesh.add_face([d6, u6, u1])
-    mesh.add_face([u1, d1, d6])
+	mesh.add_face([d6, u6, u1])
+	mesh.add_face([u1, d1, d6])
 
-    # tapa de arriba
-    mesh.add_face([u3, u2, u1])
-    mesh.add_face([u3, u1, u4])
-    mesh.add_face([u4, u1, u6])
-    mesh.add_face([u4, u6, u5])
+	# tapa de arriba
+	mesh.add_face([u3, u2, u1])
+	mesh.add_face([u3, u1, u4])
+	mesh.add_face([u4, u1, u6])
+	mesh.add_face([u4, u6, u5])
 
-    return mesh
+	return mesh
+
+def createBodyMesh(textured=False):
+
+	mesh = openmesh.TriMesh()
+
+	d1 = mesh.add_vertex(np.array([  0.3,   0.0,  -0.35]))
+	d2 = mesh.add_vertex(np.array([ 0.15, -0.259, -0.35]))
+	d3 = mesh.add_vertex(np.array([-0.15, -0.259, -0.35]))
+	d4 = mesh.add_vertex(np.array([ -0.3,    0.0, -0.35]))
+	d5 = mesh.add_vertex(np.array([-0.15,  0.259, -0.35]))
+	d6 = mesh.add_vertex(np.array([ 0.15,  0.259, -0.35])) 
+
+	c1 = mesh.add_vertex(np.array([  0.5,   0.0,  0.0]))
+	c2 = mesh.add_vertex(np.array([ 0.25, -0.433, 0.0]))
+	c3 = mesh.add_vertex(np.array([-0.25, -0.433, 0.0]))
+	c4 = mesh.add_vertex(np.array([ -0.5,    0.0, 0.0]))
+	c5 = mesh.add_vertex(np.array([-0.25,  0.433, 0.0]))
+	c6 = mesh.add_vertex(np.array([ 0.25,  0.433, 0.0])) 
+
+	u1 = mesh.add_vertex(np.array([  0.3,   0.0,  0.35]))
+	u2 = mesh.add_vertex(np.array([ 0.15, -0.259, 0.35]))
+	u3 = mesh.add_vertex(np.array([-0.15, -0.259, 0.35]))
+	u4 = mesh.add_vertex(np.array([ -0.3,    0.0, 0.35]))
+	u5 = mesh.add_vertex(np.array([-0.15,  0.259, 0.35]))
+	u6 = mesh.add_vertex(np.array([ 0.15,  0.259, 0.35])) 
+
+	# tapa de abajo
+	mesh.add_face([d2, d3 ,d1])
+	mesh.add_face([d1, d3, d4])
+	mesh.add_face([d1, d4, d6])
+	mesh.add_face([d6, d4, d5])
+
+	# laterales bajos
+	mesh.add_face([d1, c1, c2])
+	mesh.add_face([c2, d2, d1])
+	mesh.add_face([d2, c2, c3])
+	mesh.add_face([c3, d3, d2])
+	mesh.add_face([d3, c3, c4])
+	mesh.add_face([c4, d4, d3])
+	mesh.add_face([d4, c4, c5])
+	mesh.add_face([c5, d5, d4])
+	mesh.add_face([d5, c5, c6])
+	mesh.add_face([c6, d6, d5])
+	mesh.add_face([d6, c6, c1])
+	mesh.add_face([c1, d1, d6])
+
+	# laterales altos
+	mesh.add_face([c1, u1, u2])
+	mesh.add_face([u2, c2, c1])
+	mesh.add_face([c2, u2, u3])
+	mesh.add_face([u3, c3, c2])
+	mesh.add_face([c3, u3, u4])
+	mesh.add_face([u4, c4, c3])
+	mesh.add_face([c4, u4, u5])
+	mesh.add_face([u5, c5, c4])
+	mesh.add_face([c5, u5, u6])
+	mesh.add_face([u6, c6, c5])
+	mesh.add_face([c6, u6, u1])
+	mesh.add_face([u1, c1, c6])
+	
+
+	# tapa de arriba
+	mesh.add_face([u3, u2, u1])
+	mesh.add_face([u3, u1, u4])
+	mesh.add_face([u4, u1, u6])
+	mesh.add_face([u4, u6, u5])
+
+	return mesh
+
 
 def toShape(mesh, color=None, textured=False, verbose=False):
     assert isinstance(mesh, openmesh.TriMesh)
