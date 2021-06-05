@@ -13,123 +13,8 @@ import grafica.scene_graph as sg
 from shapes3d import *
 import newLightShaders as nl
 import lightHandler as lh
-# Clase para manejar una camara que se mueve en coordenadas polares
-class PolarCamera:
-    def __init__(self):
-        self.center = np.array([0.0, 0.0, -0.5]) # centro de movimiento de la camara y donde mira la camara
-        self.theta = 0                           # coordenada theta, angulo de la camara
-        self.rho = 5                             # coordenada rho, distancia al centro de la camara
-        self.eye = np.array([0.0, 0.0, 0.0])     # posicion de la camara
-        self.height = 0.5                        # altura fija de la camara
-        self.up = np.array([0, 0, 1])            # vector up
-        self.viewMatrix = None                   # Matriz de vista
-    
-    # Añadir ángulo a la coordenada theta
-    def set_theta(self, delta):
-        self.theta = (self.theta + delta) % (np.pi * 2)
+from controller import Controller, on_key
 
-    # Añadir distancia a la coordenada rho, sin dejar que sea menor o igual a 0
-    def set_rho(self, delta):
-        if ((self.rho + delta) > 0.1):
-            self.rho += delta
-    
-    # Actualizar la matriz de vista
-    def update_view(self):
-        # Se calcula la posición de la camara con coordenadas poleras relativas al centro
-        self.eye[0] = self.rho * np.sin(self.theta) + self.center[0]
-        self.eye[1] = self.rho * np.cos(self.theta) + self.center[1]
-        self.eye[2] = self.height + self.center[2]
-
-        # Se genera la matriz de vista
-        viewMatrix = tr.lookAt(
-            self.eye,
-            self.center,
-            self.up
-        )
-        return viewMatrix
-
-# Clase para manejar el controlador y la camara polar
-class Controller:
-    def __init__(self):
-        self.fillPolygon = True
-        self.showAxis = True
-
-        # Variables para controlar la camara
-        self.is_w_pressed = False
-        self.is_s_pressed = False
-        self.is_a_pressed = False
-        self.is_d_pressed = False
-
-        # Se crea instancia de la camara
-        self.polar_camera = PolarCamera()
-
-    # Entregar la referencia a la camara
-    def get_camera(self):
-        return self.polar_camera
-
-    # Metodo para ller el input del teclado
-    def on_key(self, window, key, scancode, action, mods):
-
-        # Caso de detectar la tecla [UP], actualiza estado de variable
-        if key == glfw.KEY_UP:
-            if action == glfw.PRESS:
-                self.is_w_pressed = True
-            elif action == glfw.RELEASE:
-                self.is_w_pressed = False
-
-        # Caso de detectar la tecla [DOWN], actualiza estado de variable
-        if key == glfw.KEY_DOWN:
-            if action == glfw.PRESS:
-                self.is_s_pressed = True
-            elif action == glfw.RELEASE:
-                self.is_s_pressed = False
-
-        # Caso de detectar la tecla [RIGHT], actualiza estado de variable
-        if key == glfw.KEY_RIGHT:
-            if action == glfw.PRESS:
-                self.is_d_pressed = True
-            elif action == glfw.RELEASE:
-                self.is_d_pressed = False
-
-        # Caso de detectar la tecla [LEFT], actualiza estado de variable
-        if key == glfw.KEY_LEFT:
-            if action == glfw.PRESS:
-                self.is_a_pressed = True
-            elif action == glfw.RELEASE:
-                self.is_a_pressed = False
-        
-        # Caso de detectar la barra espaciadora, se cambia el metodo de dibujo
-        if key == glfw.KEY_SPACE:
-            if action == glfw.PRESS:
-                self.fillPolygon = not self.fillPolygon
-
-        # Caso en que se cierra la ventana
-        if key == glfw.KEY_ESCAPE:
-            if action == glfw.PRESS:
-                glfw.set_window_should_close(window, True)
-
-        # Caso de detectar Control izquierdo, se cambia el metodo de dibujo
-        elif key == glfw.KEY_LEFT_CONTROL:
-            if action == glfw.PRESS:
-                self.showAxis = not self.showAxis
-
-    #Funcion que recibe el input para manejar la camara y controlar sus coordenadas
-    def update_camera(self, delta):
-        # Camara rota a la izquierda
-        if self.is_a_pressed:
-            self.polar_camera.set_theta(-2 * delta)
-
-        # Camara rota a la derecha
-        if self.is_d_pressed:
-            self.polar_camera.set_theta( 2 * delta)
-        
-        # Camara se acerca al centro
-        if self.is_w_pressed:
-            self.polar_camera.set_rho(-5 * delta)
-
-        # Camara se aleja del centro
-        if self.is_s_pressed:
-            self.polar_camera.set_rho(5 * delta)
 
 if __name__ == "__main__":
 
@@ -150,8 +35,11 @@ if __name__ == "__main__":
     glfw.make_context_current(window)
 
     controller = Controller()
-    # Connecting the callback function 'on_key' to handle keyboard events
-    glfw.set_key_callback(window, controller.on_key)
+    def on_key_wrapper(window, key, scancode, action, mods):
+        on_key(controller, window, key, scancode, action, mods)
+
+    # Connecting the callback function 'on_key_wrapper' to handle keyboard events
+    glfw.set_key_callback(window, on_key_wrapper)
 
     # Pipeline con shaders con multiples fuentes de luz
     phongPipeline = nl.MultiplePhongShaderProgram()
@@ -183,9 +71,6 @@ if __name__ == "__main__":
     glfw.swap_interval(0)
     t0 = glfw.get_time()
     t_inicial = glfw.get_time()
-
-
-    
 
     # Application loop
     while not glfw.window_should_close(window):
@@ -221,13 +106,10 @@ if __name__ == "__main__":
         lh.setShaderUniforms(lightingPipeline, camera, projection, viewMatrix)
         scene.update(delta)
 
-
         lh.setShaderUniforms(phongTexPipeline, camera, projection, viewMatrix)
         plane1.update(delta)
         tex_toro.update(delta)
         
-        
-
         # Once the drawing is rendered, buffers are swap so an uncomplete drawing is never seen.
         glfw.swap_buffers(window)
 
