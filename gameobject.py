@@ -1,5 +1,7 @@
 import grafica.scene_graph as sg
 import grafica.transformations as tr
+import grafica.gpu_shape as gs
+import numpy as np
 
 class GameObject:
 
@@ -8,8 +10,8 @@ class GameObject:
 
 		self.nombre = nombre
 
-		self.position = (0, 0, 0)
-		self.rotation = (0, 0, 0) # rotacion en grados
+		self.position = [0, 0, 0]
+		self.rotation = [0, 0, 0] # rotacion en grados
 		self.scale = (1, 1, 1)
 		self.time = 0
 
@@ -18,26 +20,36 @@ class GameObject:
 		self.nodo.transform = tr.matmul([tr.translate(0,0,0), tr.scale(0.1,0.1,0.1)])
 		self.nodo.childs = []
 	
-	# En particular, un GameObject con modelo no puede tener mas hijos
+	
 	def setModel(self, modelo):
 		self.nodo.childs = [modelo]
 
-	def addChilds(self, childList):	
+	def addChilds(self, childList):
+		# En particular, un GameObject con modelo no puede tener mas hijos
+		if len(self.nodo.childs) > 0:
+			assert not isinstance(self.nodo.childs[0], gs.GPUShape) , "Un GameObject con modelo no puede tener mas hijos"
+
 		self.nodo.childs += childList
 
-	def setPosition(position_vector):
+	def setPosition(self, position_vector):
 		self.position = position_array
 
-	def translate(position_vector):
-		self.position = self.position + position_vector
+	def translate(self, position_vector):
+		self.position = [
+						self.position[0] + position_vector[0],
+						self.position[1] + position_vector[1],
+						self.position[2] + position_vector[2]]
 
 	def setRotation(rotation_vector):
 		self.rotation = rotation_vector
 
-	def rotate(rotation_vector):
-		self.rotation = self.rotation + rotation_vector
+	def rotate(self, rotation_vector):
+		self.rotation = [
+						self.rotation[0] + rotation_vector[0],
+						self.rotation[1] + rotation_vector[1],
+						self.rotation[2] + rotation_vector[2]]
 
-	def setScale(scale_vector):
+	def setScale(self, scale_vector):
 		self.scale = scale_vector			
 
 	def clear(self):

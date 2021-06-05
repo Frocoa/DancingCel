@@ -1,19 +1,16 @@
 import glfw
 import OpenGL.GL.shaders
 import numpy as np
-import grafica.transformations as tr
 import grafica.basic_shapes as bs
-import grafica.easy_shaders as es
 import grafica.performance_monitor as pm
-import grafica.lighting_shaders as ls
 import newLightShaders as nl
 import lightHandler as lh
+import meshes as mh
 from controller import Controller, on_key
 from camera import Camera
 from gameobject import GameObject
 from shapes3d import *
 from OpenGL.GL import *
-
 
 if __name__ == "__main__":
 
@@ -60,11 +57,17 @@ if __name__ == "__main__":
     scene = GameObject("escena", phongPipeline)
     scene.addChilds(sceneChilds(phongPipeline))
 
+    neck = GameObject("neck", phongPipeline)
+    neckMesh = mh.createNeckMesh()
+    neck.setModel(createGPUShape(phongPipeline, mh.toShape(neckMesh, color=(0.6, 0.1, 0.1))))
+    neck.translate([0, 0, -1.4])
+
     tex_toro = GameObject("tex toro", phongTexPipeline)
     tex_toro.setModel(createTextureGPUShape(createTextureNormalToroide(20), phongTexPipeline, "assets/barras.png"))
     plane1 = GameObject("planito", phongTexPipeline)
     plane1.setModel(createTextureGPUShape(createTextureNormalPlane(), phongTexPipeline, "assets/barras.png"))
-      
+
+    
     perfMonitor = pm.PerformanceMonitor(glfw.get_time(), 0.5)
     # glfw will swap buffers as soon as possible
     glfw.swap_interval(0)
@@ -103,22 +106,23 @@ if __name__ == "__main__":
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
 
         lightingPipeline = phongPipeline
+        plane1.rotate([delta*120, 0, 0])
         #lightingPipeline = phongSpotPipeline
 
         # se envian los uniforms asociados a la iluminacion
         lh.setShaderUniforms(lightingPipeline, camera, projection, viewMatrix)
         scene.update(delta)
+        neck.update(delta)
 
         # se envian los uniforms asociados a la iluminacion con texturas
         lh.setShaderUniforms(phongTexPipeline, camera, projection, viewMatrix)
-        plane1.update(delta)
-        tex_toro.update(delta)
+        plane1.update(delta/2)
+        #tex_toro.update(delta)
         
         # Once the drawing is rendered, buffers are swap so an uncomplete drawing is never seen.
         glfw.swap_buffers(window)
 
     scene.clear()
-    toro1.clear()
     tex_toro.clear()
     plane1.clear()
 
