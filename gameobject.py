@@ -62,32 +62,37 @@ class GameObject:
 						self.rotation[2] + rotation_array[2]]
 
 	def setScale(self, scale_array):
-		self.scale = scale_array			
+		self.scale = scale_array
+
+	def uniformScale(self, ratio):
+		self.scale = [
+					 self.scale[0]*ratio,
+					 self.scale[1]*ratio,
+					 self.scale[2]*ratio]				
 
 	def clear(self):
 		self.nodo.clear()
 
 	def update(self, deltaTime):
 		self.time += deltaTime
-		self.nodo.transform = tr.matmul([
-				tr.translate(self.position[0], self.position[1], self.position[2]),
-				tr.rotationX(self.rotation[0] * self.DEG_TO_RAD),
-				tr.rotationY(self.rotation[1] * self.DEG_TO_RAD),
-                tr.rotationZ(self.rotation[2] * self.DEG_TO_RAD),
-                tr.scale(self.scale[0], self.scale[1], self.scale[2])
-			])
-		for child in self.childs:
-			child.update_transform()
 
-		sg.drawSceneGraphNode(self.nodo, self.pipeline, "model")
+		self.update_transform()
+		self.update_draw()
 
 	# solo actualiza las coordenadas para poder llamar un gameobject hijo sin volver a dibujarlo
 	def update_transform(self):
 
-			self.nodo.transform = tr.matmul([
-				tr.translate(self.position[0], self.position[1], self.position[2]),
-				tr.rotationX(self.rotation[0] * self.DEG_TO_RAD),
-				tr.rotationY(self.rotation[1] * self.DEG_TO_RAD),
-                tr.rotationZ(self.rotation[2] * self.DEG_TO_RAD),
-                tr.scale(self.scale[0], self.scale[1], self.scale[2])
-			])
+		self.nodo.transform = tr.matmul([
+			tr.translate(self.position[0], self.position[1], self.position[2]),
+			tr.rotationX(self.rotation[0] * self.DEG_TO_RAD),
+			tr.rotationY(self.rotation[1] * self.DEG_TO_RAD),
+            tr.rotationZ(self.rotation[2] * self.DEG_TO_RAD),
+            tr.scale(self.scale[0], self.scale[1], self.scale[2])
+		])
+
+		for child in self.childs:
+			child.update_transform()
+
+	def update_draw(self):
+
+		sg.drawSceneGraphNode(self.nodo, self.pipeline, "model")		
