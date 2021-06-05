@@ -1,7 +1,4 @@
-""" P3] Se presenta una escena con 4 fuentes de luz, pipelines en newLightShaders.py """
-
 import glfw
-from OpenGL.GL import *
 import OpenGL.GL.shaders
 import numpy as np
 import grafica.transformations as tr
@@ -9,11 +6,13 @@ import grafica.basic_shapes as bs
 import grafica.easy_shaders as es
 import grafica.performance_monitor as pm
 import grafica.lighting_shaders as ls
-import grafica.scene_graph as sg
-from shapes3d import *
 import newLightShaders as nl
 import lightHandler as lh
 from controller import Controller, on_key
+from camera import Camera
+from gameobject import GameObject
+from shapes3d import *
+from OpenGL.GL import *
 
 
 if __name__ == "__main__":
@@ -56,6 +55,8 @@ if __name__ == "__main__":
     # and which one is at the back
     glEnable(GL_DEPTH_TEST)
 
+    camera = Camera(controller)
+
     scene = GameObject("escena", phongPipeline)
     scene.addChilds(sceneChilds(phongPipeline))
 
@@ -78,13 +79,12 @@ if __name__ == "__main__":
         t1 = glfw.get_time()
         delta = t1 -t0
         t0 = t1
-        variacion = t1 - t_inicial
 
         # Using GLFW to check for input events
         glfw.poll_events()
 
-        controller.update_camera(delta)
-        camera = controller.get_camera()
+        #actualizar posicion de la camera y matriz de vista
+        camera.update(delta)
         viewMatrix = camera.update_view()
 
         # Setting up the projection transform
@@ -92,6 +92,10 @@ if __name__ == "__main__":
 
         # Clearing the screen in both, color and depth
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+        # Agregando el rendimiento
+        perfMonitor.update(glfw.get_time())
+        glfw.set_window_title(window, title + str(perfMonitor))
 
         # Filling or not the shapes depending on the controller state
         if (controller.fillPolygon):
@@ -102,10 +106,11 @@ if __name__ == "__main__":
         lightingPipeline = phongPipeline
         #lightingPipeline = phongSpotPipeline
 
-
+        # se envian los uniforms asociados a la iluminacion
         lh.setShaderUniforms(lightingPipeline, camera, projection, viewMatrix)
         scene.update(delta)
 
+        # se envian los uniforms asociados a la iluminacion con texturas
         lh.setShaderUniforms(phongTexPipeline, camera, projection, viewMatrix)
         plane1.update(delta)
         tex_toro.update(delta)
