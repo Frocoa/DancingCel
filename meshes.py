@@ -57,12 +57,12 @@ def createBodyMesh(textured=False):
 
 	mesh = openmesh.TriMesh()
 
-	d1 = mesh.add_vertex(np.array([  0.3,   0.0,  -0.35]))
-	d2 = mesh.add_vertex(np.array([ 0.15, -0.259, -0.35]))
-	d3 = mesh.add_vertex(np.array([-0.15, -0.259, -0.35]))
-	d4 = mesh.add_vertex(np.array([ -0.3,    0.0, -0.35]))
-	d5 = mesh.add_vertex(np.array([-0.15,  0.259, -0.35]))
-	d6 = mesh.add_vertex(np.array([ 0.15,  0.259, -0.35])) 
+	d1 = mesh.add_vertex(np.array([  0.3,   0.0,  -0.28]))
+	d2 = mesh.add_vertex(np.array([ 0.15, -0.259, -0.28]))
+	d3 = mesh.add_vertex(np.array([-0.15, -0.259, -0.28]))
+	d4 = mesh.add_vertex(np.array([ -0.3,    0.0, -0.28]))
+	d5 = mesh.add_vertex(np.array([-0.15,  0.259, -0.28]))
+	d6 = mesh.add_vertex(np.array([ 0.15,  0.259, -0.28])) 
 
 	c1 = mesh.add_vertex(np.array([  0.5,   0.0,  0.0]))
 	c2 = mesh.add_vertex(np.array([ 0.25, -0.433, 0.0]))
@@ -71,12 +71,12 @@ def createBodyMesh(textured=False):
 	c5 = mesh.add_vertex(np.array([-0.25,  0.433, 0.0]))
 	c6 = mesh.add_vertex(np.array([ 0.25,  0.433, 0.0])) 
 
-	u1 = mesh.add_vertex(np.array([  0.3,   0.0,  0.35]))
-	u2 = mesh.add_vertex(np.array([ 0.15, -0.259, 0.35]))
-	u3 = mesh.add_vertex(np.array([-0.15, -0.259, 0.35]))
-	u4 = mesh.add_vertex(np.array([ -0.3,    0.0, 0.35]))
-	u5 = mesh.add_vertex(np.array([-0.15,  0.259, 0.35]))
-	u6 = mesh.add_vertex(np.array([ 0.15,  0.259, 0.35])) 
+	u1 = mesh.add_vertex(np.array([  0.3,   0.0,  0.28]))
+	u2 = mesh.add_vertex(np.array([ 0.15, -0.259, 0.28]))
+	u3 = mesh.add_vertex(np.array([-0.15, -0.259, 0.28]))
+	u4 = mesh.add_vertex(np.array([ -0.3,    0.0, 0.28]))
+	u5 = mesh.add_vertex(np.array([-0.15,  0.259, 0.28]))
+	u6 = mesh.add_vertex(np.array([ 0.15,  0.259, 0.28])) 
 
 	# tapa de abajo
 	mesh.add_face([d2, d3 ,d1])
