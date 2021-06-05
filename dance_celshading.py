@@ -60,8 +60,6 @@ if __name__ == "__main__":
     scene = GameObject("escena", phongPipeline)
     scene.addChilds(sceneChilds(phongPipeline))
 
-    toro1 = createToroNode(0.7, 0.6, 0.4, phongPipeline)
-
     tex_toro = GameObject("tex toro", phongTexPipeline)
     tex_toro.setModel(createTextureGPUShape(createTextureNormalToroide(20), phongTexPipeline, "assets/barras.png"))
     plane1 = GameObject("planito", phongTexPipeline)
@@ -70,6 +68,7 @@ if __name__ == "__main__":
     perfMonitor = pm.PerformanceMonitor(glfw.get_time(), 0.5)
     # glfw will swap buffers as soon as possible
     glfw.swap_interval(0)
+
     t0 = glfw.get_time()
     t_inicial = glfw.get_time()
 
