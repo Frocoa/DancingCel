@@ -25,14 +25,17 @@ class GameObject:
 		self.nodo.childs = []
 	
 	
+	# le asocia un modelo al GameObject
 	def setModel(self, modelo, hasTexture = False):
 		self.nodo.childs = [modelo]
 		if hasTexture == True:
 			self.hasTexture = True
 
+	# cambia el pipeline del GameObject
 	def changePipeline(self, pipeline):
 		self.pipeline = pipeline
 
+	# cambia los pipelines desde este GameObject hacia abajo
 	def changeTreesPipeline(self, pipeline, tex_pipeline):
 		
 		if self.hasTexture == False:
@@ -62,40 +65,49 @@ class GameObject:
 			self.childs += [child]
 			self.nodo.childs += [child.nodo]
 
+	# determina el tipo de dibujo que se usara
 	def setDrawType(self, newType):
 		assert newType == "triangles" or newType == "lines"
 		self.drawType = newType
 
+	# especifica una nueva posicion del objeto
 	def setPosition(self, position_array):
 		self.position = position_array	
 
+	# mueve el GameObject respecto a su posicion anterior
 	def translate(self, position_array):
 		self.position = [
 						self.position[0] + position_array[0],
 						self.position[1] + position_array[1],
 						self.position[2] + position_array[2]]
-
+    
+    # especifica una nueva rotacion del objeto
 	def setRotation(self, rotation_array):
 		self.rotation = rotation_array
 
+	# rota el GameObject respecto a su posicion anterior
 	def rotate(self, rotation_array):
 		self.rotation = [
 						self.rotation[0] + rotation_array[0],
 						self.rotation[1] + rotation_array[1],
 						self.rotation[2] + rotation_array[2]]
 
+	# especifica una nuevo tamaño variable en cada coordenada
 	def setScale(self, scale_array):
 		self.scale = scale_array
 
+	# multiplica uniformemente el tamaño del objeto respecto a un ratio
 	def uniformScale(self, ratio):
 		self.scale = [
 					 self.scale[0] * ratio,
 					 self.scale[1] * ratio,
 					 self.scale[2] * ratio]				
 
+	# libera la memoria del objeto y de sus hijos
 	def clear(self):
 		self.nodo.clear()
 
+	# update
 	def update(self, deltaTime, camera, projection, viewMatrix):
 		self.time += deltaTime
 
@@ -118,6 +130,7 @@ class GameObject:
 		for child in self.childs:
 			child.update_transform()
 
+	# dibuja al GameObject y a sus hijos
 	def draw(self, pipeline, transformName, camera, projection, viewMatrix, shininess = 100, att = 0.05, parentTransform=tr.identity()):
 		node = self.nodo
 		assert(isinstance(node, sg.SceneGraphNode))
