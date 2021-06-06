@@ -147,6 +147,23 @@ def createTextureNormalPlane():
 
     return bs.Shape(vertices, indices)
 
+def createLegShape():
+    # esta hecho para ser dibujado con lineas
+    # va a tener una articulacion doble para que pueda 
+    # doblar la rodilla utilizando dibujo dinamico
+    vertices = [
+             0,     0,  0.5,  0, 0, 0,
+             0,     0,  0.0,  0, 0, 0,
+             0,     0, -0.5,  0, 0, 0,
+        -0.177, 0.177,    0,  0, 0, 0]
+
+    indices = [
+            0, 1,
+            1, 2,
+            2, 3]     
+
+    return bs.Shape(vertices, indices)        
+
 def createTexPlaneNode(pipeline):
     plane = createTextureGPUShape(createTextureNormalPlane(), pipeline, "assets/barras.png")
 

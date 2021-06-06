@@ -54,6 +54,7 @@ if __name__ == "__main__":
     # As we work in 3D, we need to check which part is in front,
     # and which one is at the back
     glEnable(GL_DEPTH_TEST)
+    glLineWidth(10)
 
     camera = Camera(controller)
 
@@ -101,7 +102,7 @@ if __name__ == "__main__":
         #lightingPipeline = phongSpotPipeline
 
         ########          Dibujo          ########
-        scene.update(delta, camera, projection, viewMatrix)
+        #scene.update(delta, camera, projection, viewMatrix)
         character.update(delta, camera, projection, viewMatrix)
 
         # Once the drawing is rendered, buffers are swap so an uncomplete drawing is never seen.

@@ -87,18 +87,32 @@ def createPlane(pipeline, nombre, texture_name):
 
 def createCharacter(pipeline, tex_pipeline):
     bodyMesh = mh.createBodyMesh()
+    legModel = createGPUShape(pipeline, createLegShape())
     faceObject = createPlane(tex_pipeline, "face", "smile" )
     tailObject = createTail(pipeline)
+
 
     bodyShape = GameObject("body", pipeline)
     bodyShape.setModel(createGPUShape(pipeline, mh.toShape(bodyMesh, color=(255/255, 128/255, 0.0))))
     bodyShape.uniformScale(1.3)
 
-    faceObject.setPosition([1,0,0])
+    leg1Object = GameObject("leg1", pipeline)
+    leg1Object.setModel(legModel)
+    leg1Object.setPosition([0, -0.2, -0.8])
+    leg1Object.setRotation([0, 0, 180])
+    leg1Object.setDrawType("lines")
+
+    leg2Object = GameObject("leg2", pipeline)
+    leg2Object.setModel(legModel)
+    leg2Object.setPosition([0, 0.2, -0.8])
+    leg2Object.setRotation([0, 0, -90])
+    leg2Object.setDrawType("lines")
+
+    faceObject.setPosition([0.57, 0, 0])
     faceObject.setRotation([0, 0, 90])
 
     character = GameObject("character", pipeline)
-    character.addChilds([bodyShape, tailObject, faceObject])
+    character.addChilds([bodyShape, tailObject, faceObject,leg1Object, leg2Object])
 
 
     return character    

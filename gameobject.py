@@ -20,7 +20,7 @@ class GameObject:
 		self.pipeline = pipeline
 		self.drawType = "triangles"
 		self.nodo = sg.SceneGraphNode(nombre)
-		self.nodo.transform = tr.matmul([tr.translate(0,0,0), tr.scale(0.1,0.1,0.1)])
+		self.nodo.transform = tr.matmul([tr.translate(0, 0, 0), tr.scale(0.1, 0.1, 0.1)])
 		self.nodo.childs = []
 	
 	
@@ -45,8 +45,12 @@ class GameObject:
 			self.childs += [child]
 			self.nodo.childs += [child.nodo]
 
+	def setDrawType(self, newType):
+		assert newType == "triangles" or newType == "lines"
+		self.drawType = newType
+
 	def setPosition(self, position_array):
-		self.position = position_array
+		self.position = position_array	
 
 	def translate(self, position_array):
 		self.position = [
@@ -68,9 +72,9 @@ class GameObject:
 
 	def uniformScale(self, ratio):
 		self.scale = [
-					 self.scale[0]*ratio,
-					 self.scale[1]*ratio,
-					 self.scale[2]*ratio]				
+					 self.scale[0] * ratio,
+					 self.scale[1] * ratio,
+					 self.scale[2] * ratio]				
 
 	def clear(self):
 		self.nodo.clear()
@@ -114,10 +118,11 @@ class GameObject:
 		    glUniform1ui(glGetUniformLocation(pipeline.shaderProgram, "shininess"), shininess)
 		    glUniform1f(glGetUniformLocation(pipeline.shaderProgram, "quadraticAttenuation"), att)
 
-		    if (self.drawType == "triangles"):
+		    if self.drawType == "triangles":
 		    	pipeline.drawCall(leaf)
-		    if (self.drawType == "lines"):
-		    	pipeline.drawCall(leaf,GL_LINES )	
+		    	
+		    if self.drawType == "lines":
+		    	pipeline.drawCall(leaf,GL_LINES)	
 
 		# If the child is not a leaf, it MUST be a GameObject,
 		# so this draw function is called recursively
