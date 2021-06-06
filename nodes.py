@@ -1,5 +1,6 @@
 import meshes as mh
 from gameobject import GameObject
+from character import Character
 from shapes3d import *
 
 
@@ -111,7 +112,7 @@ def createCharacter(pipeline, tex_pipeline):
     faceObject.setPosition([0.57, 0, 0])
     faceObject.setRotation([0, 0, 90])
 
-    character = GameObject("character", pipeline)
+    character = Character(pipeline)
     character.setPosition([0, 0, -1])
     character.addChilds([bodyShape, tailObject, faceObject,leg1Object, leg2Object])
 

@@ -161,3 +161,19 @@ class GameObject:
 		        child.draw(child.pipeline, transformName, camera, projection, viewMatrix, shininess,att, newTransform)
 
 		
+def findGameObject(nombre, gameobject):
+
+    # Se encuentra el GameObject buscado
+    if gameobject.nombre == nombre:
+        return gameobject
+
+    # El GameObject no esta en esta rama
+    print(gameobject.nombre)
+    if len(gameobject.childs) == 0:
+    	return  
+    
+    # Se busca en todas las ramificaciones
+    for child in gameobject.childs:
+        foundGameObject = findGameObject(nombre, child)
+        if foundGameObject != None:
+            return foundGameObject
