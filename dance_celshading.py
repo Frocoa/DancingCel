@@ -100,19 +100,14 @@ if __name__ == "__main__":
         lightingPipeline = phongPipeline
         #lightingPipeline = phongSpotPipeline
 
-        ########          GEOMETRICO          ########
-        # se envian los uniforms asociados a la iluminacion
-        lh.setShaderUniforms(lightingPipeline, camera, projection, viewMatrix)
-        scene.update(delta)
-        character.update(delta)
-
-        ########          TEXTURAS          ########
-        # se envian los uniforms asociados a la iluminacion con texturas
-        lh.setShaderUniforms(phongTexPipeline, camera, projection, viewMatrix)
+        ########          Dibujo          ########
+        scene.update(delta, camera, projection, viewMatrix)
+        character.update(delta, camera, projection, viewMatrix)
 
         # Once the drawing is rendered, buffers are swap so an uncomplete drawing is never seen.
         glfw.swap_buffers(window)
 
     scene.clear()
+    character.clear()
 
     glfw.terminate()

@@ -1,3 +1,5 @@
+from OpenGL.GL import *
+import lightHandler as lh
 import grafica.scene_graph as sg
 import grafica.transformations as tr
 import grafica.gpu_shape as gs
@@ -9,7 +11,6 @@ class GameObject:
 		self.DEG_TO_RAD = 0.0174533
 
 		self.nombre = nombre
-
 		self.position = [0, 0, 0]
 		self.rotation = [0, 0, 0] # rotacion en grados
 		self.scale = [1, 1, 1]
@@ -17,6 +18,7 @@ class GameObject:
 		self.time = 0
 
 		self.pipeline = pipeline
+		self.drawType = "triangles"
 		self.nodo = sg.SceneGraphNode(nombre)
 		self.nodo.transform = tr.matmul([tr.translate(0,0,0), tr.scale(0.1,0.1,0.1)])
 		self.nodo.childs = []
@@ -73,17 +75,19 @@ class GameObject:
 	def clear(self):
 		self.nodo.clear()
 
-	def update(self, deltaTime):
+	def update(self, deltaTime, camera, projection, viewMatrix):
 		self.time += deltaTime
 
 		self.update_transform()
-		self.update_draw()
+		self.draw(self.pipeline, "model", camera, projection, viewMatrix)
 
 	# solo actualiza las coordenadas para poder llamar un gameobject hijo sin volver a dibujarlo
 	def update_transform(self):
 
 		self.nodo.transform = tr.matmul([
 			tr.translate(self.position[0], self.position[1], self.position[2]),
+
+			# las rotaciones siempre van a ser en orden x,y,z
 			tr.rotationX(self.rotation[0] * self.DEG_TO_RAD),
 			tr.rotationY(self.rotation[1] * self.DEG_TO_RAD),
             tr.rotationZ(self.rotation[2] * self.DEG_TO_RAD),
@@ -93,5 +97,32 @@ class GameObject:
 		for child in self.childs:
 			child.update_transform()
 
-	def update_draw(self):
-		sg.drawSceneGraphNode(self.nodo, self.pipeline, "model")		
+	def draw(self, pipeline, transformName, camera, projection, viewMatrix, shininess = 100, att = 0.05, parentTransform=tr.identity()):
+		node = self.nodo
+		assert(isinstance(node, sg.SceneGraphNode))
+
+		# Composing the transformations through this path
+		newTransform = np.matmul(parentTransform, node.transform)
+
+		# If the child node is a leaf, it should be a GPUShape.
+		# Hence, it can be drawn with drawCall
+		if len(node.childs) == 1 and isinstance(node.childs[0], gs.GPUShape):
+		    leaf = node.childs[0]
+
+		    lh.setShaderUniforms(pipeline, camera, projection, viewMatrix)
+		    glUniformMatrix4fv(glGetUniformLocation(pipeline.shaderProgram, transformName), 1, GL_TRUE, newTransform)
+		    glUniform1ui(glGetUniformLocation(pipeline.shaderProgram, "shininess"), shininess)
+		    glUniform1f(glGetUniformLocation(pipeline.shaderProgram, "quadraticAttenuation"), att)
+
+		    if (self.drawType == "triangles"):
+		    	pipeline.drawCall(leaf)
+		    if (self.drawType == "lines"):
+		    	pipeline.drawCall(leaf,GL_LINES )	
+
+		# If the child is not a leaf, it MUST be a GameObject,
+		# so this draw function is called recursively
+		else:
+		    for child in self.childs:
+		        child.draw(child.pipeline, transformName, camera, projection, viewMatrix, shininess,att, newTransform)
+
+		

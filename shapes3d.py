@@ -25,33 +25,6 @@ def createTextureGPUShape(shape, pipeline, path):
         path, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST)
     return gpuShape
 
-
-def sceneChilds(pipeline):
-    # Se crea la escena base
-
-    # Se crean las shapes en GPU
-    gpuGrayCube = createGPUShape(pipeline, bs.createColorNormalsCube(1.0,0.7,0.7)) # Shape del cubo gris
-
-    # Nodo del cubo gris
-    grayCubeNode = sg.SceneGraphNode("grayCube")
-    grayCubeNode.childs = [gpuGrayCube]
-
-    # Nodo del suelo de color gris
-    floorNode = sg.SceneGraphNode("floor")
-    floorNode.transform = tr.translate(0, 0, -1)
-    floorNode.childs = [grayCubeNode]
-
-    # Nodo de la escena para realizar un escalamiento
-    sceneNode = sg.SceneGraphNode("scene")
-    sceneNode.transform = tr.matmul([tr.translate(0, 0, -1.5), tr.scale(5, 5, 1)])
-    sceneNode.childs = [floorNode]
-
-    # Nodo final de la escena 
-    trSceneNode = sg.SceneGraphNode("tr_scene")
-    trSceneNode.childs = [sceneNode]
-
-    return trSceneNode.childs
-
 def createCube1(pipeline):
     # Funcion para crear Grafo de un objeto de la escena, se separa en otro grafo, por si se quiere dibujar con otro material
     gpuGrayCube = createGPUShape(pipeline, bs.createColorNormalsCube(0.5, 0.5, 0.5)) # Shape del cubo gris

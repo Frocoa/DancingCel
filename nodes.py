@@ -4,10 +4,33 @@ from shapes3d import *
 
 
 def createScene(pipeline):
-    scene = GameObject("escena", pipeline)
-    scene.nodeAddChilds(sceneChilds(pipeline))
+    # Se crea la escena base
 
-    return scene
+    # Se crean las shapes en GPU
+    gpuGrayCube = createGPUShape(pipeline, bs.createColorNormalsCube(1.0,0.7,0.7)) # Shape del cubo gris
+
+    # Nodo del cubo gris
+    grayCube = GameObject("grayCube", pipeline)
+    grayCube.setModel(gpuGrayCube)
+
+    # Nodo del suelo de color gris
+    floor = GameObject("floor", pipeline)
+    floor.setPosition([0, 0, -1])
+    floor.addChilds([grayCube])
+
+    # Nodo de la escena para realizar un escalamiento
+    scene = GameObject("scene", pipeline)
+    scene.setPosition([0, 0, -1.5])
+    scene.setScale([5,5,1])
+    scene.addChilds([floor])
+
+    # Nodo final de la escena 
+    trScene = GameObject("trScene", pipeline)
+    trScene.addChilds([scene])
+
+    return trScene
+
+    
 
 def createTail(pipeline):
     tailMesh = mh.createTailMesh()
@@ -72,6 +95,7 @@ def createCharacter(pipeline, tex_pipeline):
     bodyShape.uniformScale(1.3)
 
     faceObject.setPosition([1,0,0])
+    faceObject.setRotation([0, 0, 90])
 
     character = GameObject("character", pipeline)
     character.addChilds([bodyShape, tailObject, faceObject])

@@ -614,11 +614,15 @@ class MultipleTexturePhongShaderProgram:
             {
                 // ambient
                 vec3 ambient = Ka * La;
-                
+        
                 // diffuse
                 // fragment normal has been interpolated, so it does not necessarily have norm equal to 1
                 vec3 normalizedNormal = normalize(fragNormal);
                 vec4 fragOriginalColor = texture(samplerTex, fragTexCoords);
+
+                if(fragOriginalColor.a < 0.1){
+                    discard;
+                }
 
                 // Vector para sumar la contribucion de cada fuente de luz
                 vec3 result = vec3(0.0f, 0.0f, 0.0f);
