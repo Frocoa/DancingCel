@@ -4,7 +4,7 @@ import OpenGL.GL.shaders
 import numpy as np
 import grafica.basic_shapes as bs
 import grafica.performance_monitor as pm
-import newLightShaders as nl
+import LightShaders as ls
 import lightHandler as lh
 import meshes as mh
 import nodes as nd
@@ -41,12 +41,15 @@ if __name__ == "__main__":
     glfw.set_key_callback(window, on_key_wrapper)
 
     # Pipeline con shaders con multiples fuentes de luz
-    phongPipeline = nl.MultiplePhongShaderProgram()
-    phongSpotPipeline = nl.MultiplePhongSpotShaderProgram()
-    phongTexPipeline = nl.MultipleTexturePhongShaderProgram()
+    phongPipeline = ls.MultiplePhongShaderProgram()
+    celPipeline = ls.MultipleCelShaderProgram()
+    phongSpotPipeline = ls.MultiplePhongSpotShaderProgram()
+    celSpotPipeline = ls.MultipleSpotCelShaderProgram()
 
-    # This shader program does not consider lighting
-    mvpPipeline = es.SimpleModelViewProjectionShaderProgram()
+    phongTexPipeline = ls.MultipleTexturePhongShaderProgram()
+    celTexPipeline = ls.MultipleTextureCelShaderProgram()
+    phongTexSpotPipeline = ls.MultipleTexturePhongSpotShaderProgram()
+    celTexSpotPipeline = ls.MultipleTextureSpotCelShaderProgram()
 
     # Setting up the clear screen color
     glClearColor(0.85, 0.85, 0.85, 1.0)
@@ -65,8 +68,12 @@ if __name__ == "__main__":
     t0 = glfw.get_time()
     t_inicial = glfw.get_time()
 
-    character = nd.createCharacter(phongPipeline, phongTexPipeline)
-    scene = nd.createScene(phongPipeline)
+    lightingPipeline = celPipeline
+
+    texLightingPipeline = celTexPipeline
+
+    character = nd.createCharacter(lightingPipeline, texLightingPipeline)
+    scene = nd.createScene(lightingPipeline)
 
     # Application loop
     while not glfw.window_should_close(window):
@@ -93,16 +100,13 @@ if __name__ == "__main__":
         glfw.set_window_title(window, title + str(perfMonitor))
 
         # Filling or not the shapes depending on the controller state
-        if (controller.fillPolygon):
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+        if (controller.is_tab_pressed):
+            character.changeTreesPipeline(phongPipeline, phongTexPipeline)
         else:
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-
-        lightingPipeline = phongPipeline
-        #lightingPipeline = phongSpotPipeline
+            character.changeTreesPipeline(celPipeline, celTexPipeline)
 
         ########          Dibujo          ########
-        #scene.update(delta, camera, projection, viewMatrix)
+        scene.update(delta, camera, projection, viewMatrix)
         character.update(delta, camera, projection, viewMatrix)
 
         # Once the drawing is rendered, buffers are swap so an uncomplete drawing is never seen.

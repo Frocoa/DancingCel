@@ -19,13 +19,30 @@ class GameObject:
 
 		self.pipeline = pipeline
 		self.drawType = "triangles"
+		self.hasTexture = False
 		self.nodo = sg.SceneGraphNode(nombre)
 		self.nodo.transform = tr.matmul([tr.translate(0, 0, 0), tr.scale(0.1, 0.1, 0.1)])
 		self.nodo.childs = []
 	
 	
-	def setModel(self, modelo):
+	def setModel(self, modelo, hasTexture = False):
 		self.nodo.childs = [modelo]
+		if hasTexture == True:
+			self.hasTexture = True
+
+	def changePipeline(self, pipeline):
+		self.pipeline = pipeline
+
+	def changeTreesPipeline(self, pipeline, tex_pipeline):
+		
+		if self.hasTexture == False:
+			self.pipeline = pipeline
+		else:
+			self.pipeline = tex_pipeline
+
+		for child in self.childs:
+			child.changeTreesPipeline(pipeline, tex_pipeline)			
+				
 
 	# añade nodos que van a ser dibujados siempre en su posicion inicial
 	def nodeAddChilds(self, childList):

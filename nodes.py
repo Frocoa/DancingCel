@@ -81,7 +81,7 @@ def createTail(pipeline):
 def createPlane(pipeline, nombre, texture_name):
     plane = GameObject(nombre, pipeline)
     path = "assets/" + texture_name +".png"
-    plane.setModel(createTextureGPUShape(createTextureNormalPlane(), pipeline, path))
+    plane.setModel(createTextureGPUShape(createTextureNormalPlane(), pipeline, path), True)
 
     return plane
 
@@ -112,6 +112,7 @@ def createCharacter(pipeline, tex_pipeline):
     faceObject.setRotation([0, 0, 90])
 
     character = GameObject("character", pipeline)
+    character.setPosition([0, 0, -1])
     character.addChilds([bodyShape, tailObject, faceObject,leg1Object, leg2Object])
 
 

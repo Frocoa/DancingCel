@@ -25,19 +25,19 @@ class Camera:
     #Funcion que recibe el input para manejar la camara y controlar sus coordenadas
     def update(self, delta):
         # Camara rota a la izquierda
-        if self.controller.is_a_pressed:
+        if self.controller.is_left_pressed:
             self.set_theta(-2 * delta)
 
         # Camara rota a la derecha
-        if self.controller.is_d_pressed:
+        if self.controller.is_right_pressed:
             self.set_theta( 2 * delta)
         
         # Camara se acerca al centro
-        if self.controller.is_w_pressed:
+        if self.controller.is_up_pressed:
             self.set_rho(-5 * delta)
 
         # Camara se aleja del centro
-        if self.controller.is_s_pressed:
+        if self.controller.is_down_pressed:
             self.set_rho(5 * delta)
 
     # Actualizar la matriz de vista
