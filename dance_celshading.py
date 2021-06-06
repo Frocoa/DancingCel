@@ -13,6 +13,7 @@ from camera import Camera
 from gameobject import GameObject
 from shapes3d import *
 from OpenGL.GL import *
+from grafica.scene_graph import *
 
 if __name__ == "__main__":
 
@@ -63,7 +64,7 @@ if __name__ == "__main__":
     t0 = glfw.get_time()
     t_inicial = glfw.get_time()
 
-    character = nd.createCharacter(phongPipeline)
+    character = nd.createCharacter(phongPipeline, phongTexPipeline)
     scene = nd.createScene(phongPipeline)
 
     # Application loop

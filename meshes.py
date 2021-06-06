@@ -13,12 +13,12 @@ def createTailMesh(textured=False):
 	d5 = mesh.add_vertex(np.array([-0.25,  0.433, -1.0]))
 	d6 = mesh.add_vertex(np.array([ 0.25,  0.433, -1.0])) 
 
-	u1 = mesh.add_vertex(np.array([  0.3,   0.0,  1.0]))
-	u2 = mesh.add_vertex(np.array([ 0.15, -0.259, 1.0]))
-	u3 = mesh.add_vertex(np.array([-0.15, -0.259, 1.0]))
-	u4 = mesh.add_vertex(np.array([ -0.3,    0.0, 1.0]))
-	u5 = mesh.add_vertex(np.array([-0.15,  0.259, 1.0]))
-	u6 = mesh.add_vertex(np.array([ 0.15,  0.259, 1.0])) 
+	u1 = mesh.add_vertex(np.array([  0.3,   0.0,  0.0]))
+	u2 = mesh.add_vertex(np.array([ 0.15, -0.259, 0.0]))
+	u3 = mesh.add_vertex(np.array([-0.15, -0.259, 0.0]))
+	u4 = mesh.add_vertex(np.array([ -0.3,    0.0, 0.0]))
+	u5 = mesh.add_vertex(np.array([-0.15,  0.259, 0.0]))
+	u6 = mesh.add_vertex(np.array([ 0.15,  0.259, 0.0])) 
 
 	# tapa de abajo
 	mesh.add_face([d2, d3 ,d1])

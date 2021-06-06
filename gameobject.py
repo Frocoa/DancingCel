@@ -35,7 +35,7 @@ class GameObject:
 
 	# añade hijos que son GameObjects, sirve para poder hacer que los hijos se muevan mientras siguen conectados al padre
 	def addChilds(self, childList):	
-		# En particular, un GameObject con modelo no puede tener mas hijos
+		
 		if len(self.nodo.childs) > 0:
 			assert not isinstance(self.nodo.childs[0], gs.GPUShape) , "Un GameObject con modelo no puede tener mas hijos"
 
@@ -94,5 +94,4 @@ class GameObject:
 			child.update_transform()
 
 	def update_draw(self):
-
 		sg.drawSceneGraphNode(self.nodo, self.pipeline, "model")		
