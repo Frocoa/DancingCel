@@ -168,7 +168,6 @@ def findGameObject(nombre, gameobject):
         return gameobject
 
     # El GameObject no esta en esta rama
-    print(gameobject.nombre)
     if len(gameobject.childs) == 0:
     	return  
     

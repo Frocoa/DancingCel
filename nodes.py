@@ -93,9 +93,9 @@ def createCharacter(pipeline, tex_pipeline):
     tailObject = createTail(pipeline)
 
 
-    bodyShape = GameObject("body", pipeline)
-    bodyShape.setModel(createGPUShape(pipeline, mh.toShape(bodyMesh, color=(255/255, 128/255, 0.0))))
-    bodyShape.uniformScale(1.3)
+    torsoShape = GameObject("torso", pipeline)
+    torsoShape.setModel(createGPUShape(pipeline, mh.toShape(bodyMesh, color=(255/255, 128/255, 0.0))))
+    torsoShape.uniformScale(1.3)
 
     leg1Object = GameObject("leg1", pipeline)
     leg1Object.setModel(legModel)
@@ -112,9 +112,12 @@ def createCharacter(pipeline, tex_pipeline):
     faceObject.setPosition([0.57, 0, 0])
     faceObject.setRotation([0, 0, 90])
 
+    body = GameObject("body", pipeline)
+    body.addChilds([torsoShape, faceObject])
+
     character = Character(pipeline)
     character.setPosition([0, 0, -1])
-    character.addChilds([bodyShape, tailObject, faceObject,leg1Object, leg2Object])
+    character.addChilds([body, tailObject,leg1Object, leg2Object])
 
 
     return character    
