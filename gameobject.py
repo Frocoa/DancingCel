@@ -1,5 +1,5 @@
 from OpenGL.GL import *
-import lightHandler as lh
+import uniformHandler as uh
 import grafica.scene_graph as sg
 import grafica.transformations as tr
 import grafica.gpu_shape as gs
@@ -131,7 +131,7 @@ class GameObject:
 			child.update_transform()
 
 	# dibuja al GameObject y a sus hijos
-	def draw(self, pipeline, transformName, camera, projection, viewMatrix, shininess = 100, att = 0.05, parentTransform=tr.identity()):
+	def draw(self, pipeline, transformName, camera, projection, viewMatrix, shininess = 50, att = 0.05, parentTransform=tr.identity()):
 		node = self.nodo
 		assert(isinstance(node, sg.SceneGraphNode))
 
@@ -143,7 +143,7 @@ class GameObject:
 		if len(node.childs) == 1 and isinstance(node.childs[0], gs.GPUShape):
 		    leaf = node.childs[0]
 
-		    lh.setShaderUniforms(pipeline, camera, projection, viewMatrix)
+		    uh.setShaderUniforms(pipeline, camera, projection, viewMatrix)
 		    glUniformMatrix4fv(glGetUniformLocation(pipeline.shaderProgram, transformName), 1, GL_TRUE, newTransform)
 		    glUniform1ui(glGetUniformLocation(pipeline.shaderProgram, "shininess"), shininess)
 		    glUniform1f(glGetUniformLocation(pipeline.shaderProgram, "quadraticAttenuation"), att)

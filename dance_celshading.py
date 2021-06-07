@@ -5,7 +5,6 @@ import numpy as np
 import grafica.basic_shapes as bs
 import grafica.performance_monitor as pm
 import LightShaders as ls
-import lightHandler as lh
 import meshes as mh
 import nodes as nd
 from controller import Controller, on_key
