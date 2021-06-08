@@ -1,13 +1,9 @@
 # coding=utf-8
-"""Hermite and Bezier curves using python, numpy and matplotlib"""
+"""Catmull-Rom , Hermite and Bezier curves using python and numpy """
 
 import numpy as np
 import matplotlib.pyplot as mpl
 from mpl_toolkits.mplot3d import Axes3D
-
-__author__ = "Daniel Calderon"
-__license__ = "MIT"
-
 
 def generateT(t):
     return np.array([[1, t, t**2, t**3]]).T
@@ -65,25 +61,43 @@ def evalCurve(M, N):
         
     return curve
 
-# M is the cubic curve matrix, N is the number of samples between 0 and 1
-def evalTripleCurve(P0, P1, P2, P3, P4, P5, N):
+
+# Este metodo evalua curvas de Catmull-Rom de una cantidad arbitraria de puntos y las conecta
+def evalMultiCatCurve(points, N):
+    assert len(points) >= 4, "Se necesitan al menos 4 puntos para Catmull-Rom"
+
+    matrices = []
+    counter = 0
+    curvesAmount = len(points) - 3
+    
 
     # Matrices
-    Mc1 = catMatrix(P0, P1, P2, P3)
-    Mc2 = catMatrix(P1, P2, P3, P4)
-    Mc3 = catMatrix(P2, P3, P4, P5)
+    while counter <= curvesAmount - 1:
+        matrices.append(
+                    catMatrix(
+                        points[counter],
+                        points[counter + 1],
+                        points[counter + 2],
+                        points[counter + 3]))
+        counter += 1
+
 
     # The parameter t should move between 0 and 1
-    ts = np.linspace(0.0, 1.0, N//3)
-    offset = N//3
+    ts = np.linspace(0.0, 1.0, N//curvesAmount)
+    offset = N//curvesAmount
     
     # The computed value in R3 for each sample will be stored here
-    curve = np.ndarray(shape=(len(ts)*3, 3), dtype=float)
+    curve = np.ndarray(shape=(len(ts) * curvesAmount, 3), dtype=float)
     
     for i in range(len(ts)):
         T = generateT(ts[i])
-        curve[i, 0:3] = np.matmul(Mc1, T).T
-        curve[i + offset, 0:3] = np.matmul(Mc2, T).T
-        curve[i + offset*2, 0:3] = np.matmul(Mc3, T).T
+
         
-    return curve
+
+        # se va llenando la matriz curve
+        counter = 0
+        for matrix in matrices:
+            curve[i + offset * counter, 0:3] = np.matmul(matrix, T).T
+            counter += 1
+        
+    return curve    

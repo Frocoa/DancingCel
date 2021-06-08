@@ -18,7 +18,7 @@ class Character(GameObject):
 		joint4 = findGameObject("joint4", self)
 		body = findGameObject("body", self)
 
-		tailShakingCurve = evalTripleCurve( [0, 10, 0], [0, 0, 0], [5, 15, 0], [15, -15, 0], [20, 0, 0], [20, -10, 0], self.N)
+		tailShakingCurve = evalMultiCatCurve( [[0, 10, 0], [0, 0, 0], [5, 15, 0], [15, -15, 0], [20, 0, 0], [20, -10, 0]], self.N)
 
 		joint_1_rot = tailShakingCurve[math.floor(self.index)%self.N][1]
 		joint_2_rot = tailShakingCurve[math.floor(self.index + self.N/3)%self.N][1]

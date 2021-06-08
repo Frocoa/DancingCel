@@ -101,8 +101,10 @@ if __name__ == "__main__":
         # Filling or not the shapes depending on the controller state
         if (controller.is_tab_pressed):
             character.changeTreesPipeline(phongPipeline, phongTexPipeline)
+            scene.changeTreesPipeline(phongPipeline, phongTexPipeline)
         else:
             character.changeTreesPipeline(celPipeline, celTexPipeline)
+            scene.changeTreesPipeline(celPipeline, celTexPipeline)
 
         ########          Dibujo          ########
         scene.update(delta, camera, projection, viewMatrix)

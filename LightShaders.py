@@ -187,7 +187,7 @@ class MultipleCelShaderProgram:
             in vec3 fragOriginalColor;
             
             // Posiciones de las fuentes de luz
-            vec3 lightPos0 = vec3(-1.5f, -1.5f, 2.3f); 
+            vec3 lightPos0 = vec3(3.0f, 0.0f, 0.0f); 
             vec3 lightPos1 = vec3(-1.5f, 1.5f, 2.3f);  
             vec3 lightPos2 = vec3(1.5f, -1.5f, 2.3f);  
             vec3 lightPos3 = vec3(1.5f, 1.5f, 2.3f);   
