@@ -115,9 +115,7 @@ def createCharacter(pipeline, tex_pipeline):
     body = GameObject("body", pipeline)
     body.addChilds([torsoShape, faceObject])
 
-    character = Character(pipeline)
+    character = Character(pipeline, [body, tailObject,leg1Object, leg2Object]) 
     character.setPosition([0, 0, -1])
-    character.addChilds([body, tailObject,leg1Object, leg2Object])
-
 
     return character    

@@ -1,6 +1,5 @@
 from OpenGL.GL import *
-import uniformHandler as uh
-import grafica.scene_graph as sg
+import uniformhandler as uh
 import grafica.transformations as tr
 import grafica.gpu_shape as gs
 import numpy as np
@@ -108,11 +107,11 @@ class GameObject:
 			child.clear()
 
 	# update
-	def update(self, deltaTime, camera, projection, viewMatrix):
+	def update(self, deltaTime, camera, ):
 		self.time += deltaTime
 
 		self.update_transform()
-		self.draw(self.pipeline, "model", camera, projection, viewMatrix)
+		self.draw(self.pipeline, "model", camera, )
 
 	# solo actualiza las coordenadas para poder llamar un gameobject hijo sin volver a dibujarlo
 	def update_transform(self):
@@ -132,7 +131,7 @@ class GameObject:
 				child.update_transform()
 
 	# dibuja al GameObject y a sus hijos
-	def draw(self, pipeline, transformName, camera, projection, viewMatrix, shininess = 50, att = 0.05, parentTransform=tr.identity()):
+	def draw(self, pipeline, transformName, camera, parentTransform=tr.identity()):
 
 		# Composing the transformations through this path
 		newTransform = np.matmul(parentTransform, self.transform)
@@ -142,10 +141,11 @@ class GameObject:
 		if len(self.childs) == 1 and isinstance(self.childs[0], gs.GPUShape):
 		    leaf = self.childs[0]
 
-		    uh.setShaderUniforms(pipeline, camera, projection, viewMatrix)
+		    uh.setLightUniforms(pipeline)
+		    uh.setMaterialUniforms(pipeline)
+		    uh.setCameraUniforms(pipeline, camera, camera.projection, camera.viewMatrix )
 		    glUniformMatrix4fv(glGetUniformLocation(pipeline.shaderProgram, transformName), 1, GL_TRUE, newTransform)
-		    glUniform1ui(glGetUniformLocation(pipeline.shaderProgram, "shininess"), shininess)
-		    glUniform1f(glGetUniformLocation(pipeline.shaderProgram, "quadraticAttenuation"), att)
+		    
 
 		    if self.drawType == "triangles":
 		    	pipeline.drawCall(leaf)
@@ -157,7 +157,7 @@ class GameObject:
 		# so this draw function is called recursively
 		else:
 		    for child in self.childs:
-		        child.draw(child.pipeline, transformName, camera, projection, viewMatrix, shininess,att, newTransform)
+		        child.draw(child.pipeline, transformName, camera, newTransform)
 
 		
 def findGameObject(nombre, gameobject):

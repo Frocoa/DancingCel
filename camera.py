@@ -12,7 +12,13 @@ class Camera:
         self.height = 0.5                        # altura fija de la camara
         self.up = np.array([0, 0, 1])            # vector up
         self.viewMatrix = None                   # Matriz de vista
+        self.projection = None                   # Matriz de proyeccion
     
+    # Añadir la matriz de proyeccion
+    def setProjection(self, projection):
+        self.projection = projection
+
+
     # Añadir ángulo a la coordenada theta
     def set_theta(self, delta):
         self.theta = (self.theta + delta) % (np.pi * 2)
@@ -40,6 +46,8 @@ class Camera:
         if self.controller.is_down_pressed:
             self.set_rho(5 * delta)
 
+        self.update_view()    
+
     # Actualizar la matriz de vista
     def update_view(self):
         # Se calcula la posición de la camara con coordenadas poleras relativas al centro
@@ -53,4 +61,4 @@ class Camera:
             self.center,
             self.up
         )
-        return viewMatrix
+        self.viewMatrix = viewMatrix

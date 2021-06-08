@@ -2,7 +2,6 @@ import glfw
 import math
 import OpenGL.GL.shaders
 import numpy as np
-import grafica.basic_shapes as bs
 import grafica.performance_monitor as pm
 import LightShaders as ls
 import meshes as mh
@@ -12,7 +11,6 @@ from camera import Camera
 from gameobject import GameObject
 from shapes3d import *
 from OpenGL.GL import *
-from grafica.scene_graph import *
 
 if __name__ == "__main__":
 
@@ -59,6 +57,7 @@ if __name__ == "__main__":
     glLineWidth(10)
 
     camera = Camera(controller)
+    camera.setProjection(tr.perspective(60, float(width) / float(height), 0.1, 100))
 
     perfMonitor = pm.PerformanceMonitor(glfw.get_time(), 0.5)
     # glfw will swap buffers as soon as possible
@@ -67,12 +66,9 @@ if __name__ == "__main__":
     t0 = glfw.get_time()
     t_inicial = glfw.get_time()
 
-    lightingPipeline = celPipeline
-
-    texLightingPipeline = celTexPipeline
-
-    character = nd.createCharacter(lightingPipeline, texLightingPipeline)
-    scene = nd.createScene(lightingPipeline)
+    # Las pipelines que se dan aqui son solo las default, luego se pueden cambiar
+    character = nd.createCharacter(celPipeline, celTexPipeline)
+    scene = nd.createScene(celPipeline)
 
     # Application loop
     while not glfw.window_should_close(window):
@@ -86,11 +82,7 @@ if __name__ == "__main__":
 
         #actualizar posicion de la camera y matriz de vista
         camera.update(delta)
-        viewMatrix = camera.update_view()
-
-        # Setting up the projection transform
-        projection = tr.perspective(60, float(width) / float(height), 0.1, 100)
-
+        
         # Clearing the screen in both, color and depth
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
@@ -107,8 +99,8 @@ if __name__ == "__main__":
             scene.changeTreesPipeline(celPipeline, celTexPipeline)
 
         ########          Dibujo          ########
-        scene.update(delta, camera, projection, viewMatrix)
-        character.update(delta, camera, projection, viewMatrix)
+        scene.update(delta, camera)
+        character.update(delta, camera)
 
         # Once the drawing is rendered, buffers are swap so an uncomplete drawing is never seen.
         glfw.swap_buffers(window)
