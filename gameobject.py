@@ -20,14 +20,12 @@ class GameObject:
 		self.pipeline = pipeline
 		self.drawType = "triangles"
 		self.hasTexture = False
-		self.nodo = sg.SceneGraphNode(nombre)
-		self.nodo.transform = tr.matmul([tr.translate(0, 0, 0), tr.scale(0.1, 0.1, 0.1)])
-		self.nodo.childs = []
+		self.transform = tr.matmul([tr.translate(0, 0, 0), tr.scale(0.1, 0.1, 0.1)])
 	
 	
 	# le asocia un modelo al GameObject
 	def setModel(self, modelo, hasTexture = False):
-		self.nodo.childs = [modelo]
+		self.childs = [modelo]
 		if hasTexture == True:
 			self.hasTexture = True
 
@@ -44,26 +42,26 @@ class GameObject:
 			self.pipeline = tex_pipeline
 
 		for child in self.childs:
-			child.changeTreesPipeline(pipeline, tex_pipeline)			
+			if not isinstance(child, gs.GPUShape):
+				child.changeTreesPipeline(pipeline, tex_pipeline)			
 				
 
 	# añade nodos que van a ser dibujados siempre en su posicion inicial
 	def nodeAddChilds(self, childList):
 		# En particular, un GameObject con modelo no puede tener mas hijos
-		if len(self.nodo.childs) > 0:
-			assert not isinstance(self.nodo.childs[0], gs.GPUShape) , "Un GameObject con modelo no puede tener mas hijos"
+		if len(self.childs) > 0:
+			assert not isinstance(self.childs[0], gs.GPUShape) , "Un GameObject con modelo no puede tener mas hijos"
 
 		self.nodo.childs += childList
 
 	# añade hijos que son GameObjects, sirve para poder hacer que los hijos se muevan mientras siguen conectados al padre
 	def addChilds(self, childList):	
 		
-		if len(self.nodo.childs) > 0:
-			assert not isinstance(self.nodo.childs[0], gs.GPUShape) , "Un GameObject con modelo no puede tener mas hijos"
+		if len(self.childs) > 0:
+			assert not isinstance(self.childs[0], gs.GPUShape) , "Un GameObject con modelo no puede tener mas hijos"
 
 		for child in childList:
 			self.childs += [child]
-			self.nodo.childs += [child.nodo]
 
 	# determina el tipo de dibujo que se usara
 	def setDrawType(self, newType):
@@ -105,7 +103,9 @@ class GameObject:
 
 	# libera la memoria del objeto y de sus hijos
 	def clear(self):
-		self.nodo.clear()
+		for child in self.childs:
+			# aprovecho que GPUShape tiene un metodo clear
+			child.clear()
 
 	# update
 	def update(self, deltaTime, camera, projection, viewMatrix):
@@ -117,7 +117,7 @@ class GameObject:
 	# solo actualiza las coordenadas para poder llamar un gameobject hijo sin volver a dibujarlo
 	def update_transform(self):
 
-		self.nodo.transform = tr.matmul([
+		self.transform = tr.matmul([
 			tr.translate(self.position[0], self.position[1], self.position[2]),
 
 			# las rotaciones siempre van a ser en orden x,y,z
@@ -128,20 +128,19 @@ class GameObject:
 		])
 
 		for child in self.childs:
-			child.update_transform()
+			if not isinstance(child, gs.GPUShape):
+				child.update_transform()
 
 	# dibuja al GameObject y a sus hijos
 	def draw(self, pipeline, transformName, camera, projection, viewMatrix, shininess = 50, att = 0.05, parentTransform=tr.identity()):
-		node = self.nodo
-		assert(isinstance(node, sg.SceneGraphNode))
 
 		# Composing the transformations through this path
-		newTransform = np.matmul(parentTransform, node.transform)
+		newTransform = np.matmul(parentTransform, self.transform)
 
 		# If the child node is a leaf, it should be a GPUShape.
 		# Hence, it can be drawn with drawCall
-		if len(node.childs) == 1 and isinstance(node.childs[0], gs.GPUShape):
-		    leaf = node.childs[0]
+		if len(self.childs) == 1 and isinstance(self.childs[0], gs.GPUShape):
+		    leaf = self.childs[0]
 
 		    uh.setShaderUniforms(pipeline, camera, projection, viewMatrix)
 		    glUniformMatrix4fv(glGetUniformLocation(pipeline.shaderProgram, transformName), 1, GL_TRUE, newTransform)
@@ -162,6 +161,9 @@ class GameObject:
 
 		
 def findGameObject(nombre, gameobject):
+	# The name was not found in this path
+    if isinstance(gameobject, gs.GPUShape):
+        return None
 
     # Se encuentra el GameObject buscado
     if gameobject.nombre == nombre:
