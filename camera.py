@@ -1,5 +1,7 @@
 import numpy as np
 import grafica.transformations as tr
+import curves as cv
+import math
 
 # Clase para manejar una camara que se mueve en coordenadas polares
 class Camera:
@@ -13,6 +15,8 @@ class Camera:
         self.up = np.array([0, 0, 1])            # vector up
         self.viewMatrix = None                   # Matriz de vista
         self.projection = None                   # Matriz de proyeccion
+        self.N = 240
+        self.index = 1
     
     # Añadir la matriz de proyeccion
     def setProjection(self, projection):
@@ -28,8 +32,30 @@ class Camera:
         if ((self.rho + delta) > 0.1):
             self.rho += delta
 
+    # Actualizar la matriz de vista
+    def update_view(self, delta):
+        """# Se calcula la posición de la camara con coordenadas poleras relativas al centro
+        self.eye[0] = self.rho * np.sin(self.theta) + self.center[0]
+        self.eye[1] = self.rho * np.cos(self.theta) + self.center[1]
+        self.eye[2] = self.height + self.center[2]"""
+
+        curve = cv.evalMultiCatCurve( [[0, 0, 10], [5, 0, 10], [0.0, 5.0, 10], [-5.0, 0, 10], [0.0, -5.0, 10], [5, 0, 10], [0, 0, 10]], self.N)
+        self.eye[0] = curve[math.floor(self.index) % self.N][0]
+        self.eye[1] = curve[math.floor(self.index) % self.N][1]
+        self.eye[2] = curve[math.floor(self.index) % self.N][2]
+        # Se genera la matriz de vista
+        viewMatrix = tr.lookAt(
+            self.eye,
+            self.center,
+            self.up
+        )
+        self.viewMatrix = viewMatrix
+        self.index += 60*delta 
+        print(self.index)
+
     #Funcion que recibe el input para manejar la camara y controlar sus coordenadas
     def update(self, delta):
+
         # Camara rota a la izquierda
         if self.controller.is_left_pressed:
             self.set_theta(-2 * delta)
@@ -46,19 +72,4 @@ class Camera:
         if self.controller.is_down_pressed:
             self.set_rho(5 * delta)
 
-        self.update_view()    
-
-    # Actualizar la matriz de vista
-    def update_view(self):
-        # Se calcula la posición de la camara con coordenadas poleras relativas al centro
-        self.eye[0] = self.rho * np.sin(self.theta) + self.center[0]
-        self.eye[1] = self.rho * np.cos(self.theta) + self.center[1]
-        self.eye[2] = self.height + self.center[2]
-
-        # Se genera la matriz de vista
-        viewMatrix = tr.lookAt(
-            self.eye,
-            self.center,
-            self.up
-        )
-        self.viewMatrix = viewMatrix
+        self.update_view(delta)    

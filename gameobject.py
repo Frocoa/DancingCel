@@ -44,15 +44,6 @@ class GameObject:
 			if not isinstance(child, gs.GPUShape):
 				child.changeTreesPipeline(pipeline, tex_pipeline)			
 				
-
-	# añade nodos que van a ser dibujados siempre en su posicion inicial
-	def nodeAddChilds(self, childList):
-		# En particular, un GameObject con modelo no puede tener mas hijos
-		if len(self.childs) > 0:
-			assert not isinstance(self.childs[0], gs.GPUShape) , "Un GameObject con modelo no puede tener mas hijos"
-
-		self.nodo.childs += childList
-
 	# añade hijos que son GameObjects, sirve para poder hacer que los hijos se muevan mientras siguen conectados al padre
 	def addChilds(self, childList):	
 		
@@ -136,7 +127,7 @@ class GameObject:
 		# Composing the transformations through this path
 		newTransform = np.matmul(parentTransform, self.transform)
 
-		# If the child node is a leaf, it should be a GPUShape.
+		# If the child is a leaf, it should be a GPUShape.
 		# Hence, it can be drawn with drawCall
 		if len(self.childs) == 1 and isinstance(self.childs[0], gs.GPUShape):
 		    leaf = self.childs[0]
@@ -158,6 +149,7 @@ class GameObject:
 		else:
 		    for child in self.childs:
 		        child.draw(child.pipeline, transformName, camera, newTransform)
+
 
 		
 def findGameObject(nombre, gameobject):

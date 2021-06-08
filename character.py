@@ -19,7 +19,7 @@ class Character(GameObject):
 		self.body = findGameObject("body", self)
 		
 
-	def update(self, deltaTime, camera):
+	def update(self, delta, camera):
 		
 
 		tailShakingCurve = evalMultiCatCurve( [[0, 10, 0], [0, 0, 0], [5, 15, 0], [15, -15, 0], [20, 0, 0], [20, -10, 0]], self.N)
@@ -35,5 +35,5 @@ class Character(GameObject):
 		self.joint4.setRotation([joint_4_rot, 15, 0])
 		self.body.setRotation([0, 0, joint_1_rot])
 
-		GameObject.update(self, deltaTime, camera)
+		GameObject.update(self, delta, camera)
 		self.index += 1	
