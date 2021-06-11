@@ -176,7 +176,7 @@ class GameObject:
 
 		
 def findGameObject(nombre, gameobject):
-	# The name was not found in this path
+	# El objeto no se encontro
     if isinstance(gameobject, gs.GPUShape):
         return None
 
