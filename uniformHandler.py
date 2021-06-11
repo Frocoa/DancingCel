@@ -13,12 +13,12 @@ def setLightUniforms(pipeline, La = [0.25, 0.25, 0.25] , Ld = [0.5, 0.5, 0.5], L
         glUniform1f(glGetUniformLocation(pipeline.shaderProgram, "linearAttenuation"), 0.03)
 
 # Componentes aportadas por las especificaciones del material de cada objeto
-def setMaterialUniforms(pipeline):
+def setMaterialUniforms(pipeline, Ka, Kd, Ks, shininess):
 
-        glUniform3f(glGetUniformLocation(pipeline.shaderProgram, "Ka"), 0.2, 0.2, 0.2) # Componente ambiental
-        glUniform3f(glGetUniformLocation(pipeline.shaderProgram, "Kd"), 0.5, 0.5, 0.5) # Componente difusa
-        glUniform3f(glGetUniformLocation(pipeline.shaderProgram, "Ks"), 0.1, 0.1, 0.1) # Componente especular
-        glUniform1ui(glGetUniformLocation(pipeline.shaderProgram, "shininess"), 50) # Coef de brillo
+        glUniform3f(glGetUniformLocation(pipeline.shaderProgram, "Ka"), Ka[0], Ka[1], Ka[2]) # Componente ambiental
+        glUniform3f(glGetUniformLocation(pipeline.shaderProgram, "Kd"), Kd[0], Kd[1], Kd[2]) # Componente difusa
+        glUniform3f(glGetUniformLocation(pipeline.shaderProgram, "Ks"), Ks[0], Ks[1], Ks[2]) # Componente especular
+        glUniform1ui(glGetUniformLocation(pipeline.shaderProgram, "shininess"), shininess) # Coef de brillo
 
 # Uniforms de la camara
 def setCameraUniforms(pipeline, camera, projection, viewMatrix):

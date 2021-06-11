@@ -16,23 +16,22 @@ class GameObject:
 		self.childs = [] # gameobjects
 		self.time = 0
 
+		#Material
+		self.Ka = (0.2, 0.2, 0.2) # componente ambiental
+		self.Kd = (0.5, 0.5, 0.5) # componente difusa
+		self.Ks = (0.1, 0.1, 0.1) # componente especular
+		self.shininess = 50       # brillo, int
+
 		self.pipeline = pipeline
 		self.drawType = "triangles"
 		self.hasTexture = False
 		self.transform = tr.matmul([tr.translate(0, 0, 0), tr.scale(0.1, 0.1, 0.1)])
 	
-	
-	# le asocia un modelo al GameObject
-	def setModel(self, modelo, hasTexture = False):
-		self.childs = [modelo]
-		if hasTexture == True:
-			self.hasTexture = True
-
-	# cambia el pipeline del GameObject
+	# cambia el pipeline
 	def changePipeline(self, pipeline):
 		self.pipeline = pipeline
 
-	# cambia los pipelines desde este GameObject hacia abajo
+	# cambia los pipelines de este GameObject y todos sus hijos
 	def changeTreesPipeline(self, pipeline, tex_pipeline):
 		
 		if self.hasTexture == False:
@@ -43,7 +42,28 @@ class GameObject:
 		for child in self.childs:
 			if not isinstance(child, gs.GPUShape):
 				child.changeTreesPipeline(pipeline, tex_pipeline)			
-				
+	
+	# define el material del objeto
+	def setMaterial(self, Ka, Kd, Ks, shininess):
+		self.Ka = Ka
+		self.Kd = Kd
+		self.Ks = Ks
+		self.shininess = shininess
+
+	# Le pone el mismo material al objeto y a todos sus hijos
+	def setTreesMaterial(self, Ka, Kd, Ks, shininess):
+		self.setMaterial(Ka, Kd, Ks, shininess)
+
+		for child in self.childs:
+			if not isinstance(child, gs.GPUShape):
+				child.setTreesMaterial(Ka, Kd, Ks, shininess)
+
+	# le asocia un modelo al GameObject
+	def setModel(self, modelo, hasTexture = False):
+		self.childs = [modelo]
+		if hasTexture == True:
+			self.hasTexture = True
+	
 	# añade hijos que son GameObjects, sirve para poder hacer que los hijos se muevan mientras siguen conectados al padre
 	def addChilds(self, childList):	
 		
@@ -52,6 +72,7 @@ class GameObject:
 
 		for child in childList:
 			self.childs += [child]
+    
 
 	# determina el tipo de dibujo que se usara
 	def setDrawType(self, newType):
@@ -98,7 +119,7 @@ class GameObject:
 			child.clear()
 
 	# update
-	def update(self, deltaTime, camera, ):
+	def update(self, deltaTime, camera,):
 		self.time += deltaTime
 
 		self.update_transform()
@@ -133,7 +154,7 @@ class GameObject:
 		    leaf = self.childs[0]
 
 		    uh.setLightUniforms(pipeline)
-		    uh.setMaterialUniforms(pipeline)
+		    uh.setMaterialUniforms(pipeline, self.Ka, self.Kd, self.Ks, self.shininess)
 		    uh.setCameraUniforms(pipeline, camera, camera.projection, camera.viewMatrix )
 		    glUniformMatrix4fv(glGetUniformLocation(pipeline.shaderProgram, transformName), 1, GL_TRUE, newTransform)
 		    

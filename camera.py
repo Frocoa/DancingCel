@@ -5,6 +5,7 @@ import math
 
 # Clase para manejar una camara que se mueve en coordenadas polares
 class Camera:
+    
     def __init__(self, controller):
         self.controller = controller
         self.center = np.array([0.0, 0.0, -0.5]) # centro de movimiento de la camara y donde mira la camara
@@ -34,16 +35,19 @@ class Camera:
 
     # Actualizar la matriz de vista
     def update_view(self, delta):
-        """# Se calcula la posición de la camara con coordenadas poleras relativas al centro
-        self.eye[0] = self.rho * np.sin(self.theta) + self.center[0]
-        self.eye[1] = self.rho * np.cos(self.theta) + self.center[1]
-        self.eye[2] = self.height + self.center[2]"""
 
-        curve = cv.evalMultiCatCurve( [[0, 0, 10], [5, 0, 10], [0.0, 5.0, 10], [-5.0, 0, 10], [0.0, -5.0, 10], [5, 0, 10], [0, 0, 10]], self.N)
-        self.eye[0] = curve[math.floor(self.index) % self.N][0]
-        self.eye[1] = curve[math.floor(self.index) % self.N][1]
-        self.eye[2] = curve[math.floor(self.index) % self.N][2]
-        # Se genera la matriz de vista
+        if self.controller.manual == True:
+            # Se calcula la posición de la camara con coordenadas poleras relativas al centro
+            self.eye[0] = self.rho * np.sin(self.theta) + self.center[0]
+            self.eye[1] = self.rho * np.cos(self.theta) + self.center[1]
+            self.eye[2] = self.height + self.center[2]
+
+        else:
+            curve = cv.evalMultiCatCurve( [[0, 0, 10], [5, 0, 10], [0.0, 5.0, 10], [-5.0, 0, 10], [0.0, -5.0, 10], [5, 0, 10], [0, 0, 10]], self.N)
+            self.eye[0] = curve[math.floor(self.index) % self.N][0]
+            self.eye[1] = curve[math.floor(self.index) % self.N][1]
+            self.eye[2] = curve[math.floor(self.index) % self.N][2]
+            # Se genera la matriz de vista
         viewMatrix = tr.lookAt(
             self.eye,
             self.center,
@@ -51,7 +55,6 @@ class Camera:
         )
         self.viewMatrix = viewMatrix
         self.index += 60*delta 
-        print(self.index)
 
     #Funcion que recibe el input para manejar la camara y controlar sus coordenadas
     def update(self, delta):

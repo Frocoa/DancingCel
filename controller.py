@@ -13,6 +13,7 @@ class Controller:
         self.is_left_pressed = False
         self.is_right_pressed = False
         self.is_tab_pressed = False
+        self.manual = False
 
 # Metodo para leer el input del teclado
 def on_key(self, window, key, scancode, action, mods):
@@ -54,6 +55,11 @@ def on_key(self, window, key, scancode, action, mods):
     if key == glfw.KEY_TAB:
         if action == glfw.PRESS:
             self.is_tab_pressed = not self.is_tab_pressed
+
+    # Caso de detectar el numero 2
+    if key == glfw.KEY_2:
+        if action == glfw.PRESS:
+            self.manual = not self.manual        
 
     # Caso en que se cierra la ventana
     if key == glfw.KEY_ESCAPE:
