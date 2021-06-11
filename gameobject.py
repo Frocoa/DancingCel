@@ -9,23 +9,25 @@ class GameObject:
 	def __init__(self, nombre, pipeline):
 		self.DEG_TO_RAD = 0.0174533
 
-		self.nombre = nombre
-		self.position = [0, 0, 0]
+		self.nombre = nombre # nombre del objeto por el cual puede ser buscado
+		self.position = [0, 0, 0] # posicion del objeto (x, y, z)
 		self.rotation = [0, 0, 0] # rotacion en grados
-		self.scale = [1, 1, 1]
+		self.scale = [1, 1, 1] # tamaño del objeto
 		self.childs = [] # gameobjects
 		self.time = 0
+
+		self.pipeline = pipeline # pipeline con la cual se dibuja
+		self.drawType = "triangles" # metodo de dibujo 
+		self.hasTexture = False # determina si el objeto usa texturas o solo geometria
+		self.transform = tr.matmul([tr.translate(0, 0, 0), tr.scale(0.1, 0.1, 0.1)]) # transformacion
 
 		#Material
 		self.Ka = (0.2, 0.2, 0.2) # componente ambiental
 		self.Kd = (0.5, 0.5, 0.5) # componente difusa
 		self.Ks = (0.1, 0.1, 0.1) # componente especular
-		self.shininess = 50       # brillo, int
+		self.shininess = 50       # (int) brillo 
 
-		self.pipeline = pipeline
-		self.drawType = "triangles"
-		self.hasTexture = False
-		self.transform = tr.matmul([tr.translate(0, 0, 0), tr.scale(0.1, 0.1, 0.1)])
+
 	
 	# cambia el pipeline
 	def changePipeline(self, pipeline):
