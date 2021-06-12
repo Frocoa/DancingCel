@@ -42,7 +42,7 @@ class Camera:
             self.eye[0] = self.autoCurve[math.floor(self.index) % self.N][0]
             self.eye[1] = self.autoCurve[math.floor(self.index) % self.N][1]
             self.eye[2] = self.autoCurve[math.floor(self.index) % self.N][2]
-            self.index += 60*delta 
+            self.index += 60 * delta 
 
         # Se genera la matriz de vista
         viewMatrix = tr.lookAt(
@@ -57,10 +57,10 @@ class Camera:
         if self.controller.manual == True:
             # Camara se mueve a la derecha  
             if self.controller.is_left_pressed:
-                self.index -= 60*delta
+                self.index -= 60 * delta
 
             # Camara se mueve a la izquierda
             if self.controller.is_right_pressed:
-                self.index += 60*delta
+                self.index += 60 * delta
 
         self.update_view(delta)    

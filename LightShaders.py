@@ -79,13 +79,12 @@ class MultiplePhongShaderProgram:
             // Posiciones de las fuentes de luz
             vec3 lightPos0 = vec3(-1.5f, -1.5f, 2.3f); 
             vec3 lightPos1 = vec3(-1.5f, 1.5f, 2.3f);  
-            vec3 lightPos2 = vec3(1.5f, -1.5f, 2.3f);  
-            vec3 lightPos3 = vec3(1.5f, 1.5f, 2.3f);   
+            vec3 lightPos2 = vec3(1.5f, -1.5f, 2.3f);    
 
             uniform vec3 viewPosition;
             uniform vec3 La;
-            uniform vec3 Ld;
-            uniform vec3 Ls;
+            uniform mat3 Ld;
+            uniform mat3 Ls;
             uniform vec3 Ka;
             uniform vec3 Kd;
             uniform vec3 Ks;
@@ -107,10 +106,10 @@ class MultiplePhongShaderProgram:
                 vec3 result = vec3(0.0f, 0.0f, 0.0f);
 
                 // Vector que almacena las fuentes de luz
-                vec3 lights[4] = vec3[](lightPos0, lightPos1, lightPos2, lightPos3);
+                vec3 lights[3] = vec3[](lightPos0, lightPos1, lightPos2);
 
                 // Se itera por cada fuente de luz para calcular su contribucion
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 3; i++)
                 {   
                     // direccion a la fuente de luz de la iteacion actual
                     vec3 toLight = lights[i] - fragPosition;
@@ -118,13 +117,13 @@ class MultiplePhongShaderProgram:
                     // Lo demas es exactamente igual
                     vec3 lightDir = normalize(toLight);
                     float diff = max(dot(normalizedNormal, lightDir), 0.0);
-                    vec3 diffuse = Kd * Ld * diff;
+                    vec3 diffuse = Kd * Ld[i] * diff;
                     
                     // specular
                     vec3 viewDir = normalize(viewPosition - fragPosition);
                     vec3 reflectDir = reflect(-lightDir, normalizedNormal);  
                     float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
-                    vec3 specular = Ks * Ls * spec;
+                    vec3 specular = Ks * Ls[i] * spec;
 
                     // attenuation
                     float distToLight = length(toLight);
@@ -221,14 +220,13 @@ class MultipleCelShaderProgram:
             
             // Posiciones de las fuentes de luz
             vec3 lightPos0 = vec3(3.0f, 0.0f, 0.0f); 
-            vec3 lightPos1 = vec3(-1.5f, 1.5f, 2.3f);  
-            vec3 lightPos2 = vec3(1.5f, -1.5f, 2.3f);  
-            vec3 lightPos3 = vec3(1.5f, 1.5f, 2.3f);   
+            vec3 lightPos1 = vec3(-3.0f, 0.0f, 0.0f);  
+            vec3 lightPos2 = vec3(0.0f, 0.0f, 2.0f);  
 
             uniform vec3 viewPosition;
             uniform vec3 La;
-            uniform vec3 Ld;
-            uniform vec3 Ls;
+            uniform mat3 Ld;
+            uniform mat3 Ls;
             uniform vec3 Ka;
             uniform vec3 Kd;
             uniform vec3 Ks;
@@ -252,10 +250,10 @@ class MultipleCelShaderProgram:
                 vec3 result = vec3(0.0f, 0.0f, 0.0f);
 
                 // Vector que almacena las fuentes de luz
-                vec3 lights[4] = vec3[](lightPos0, lightPos1, lightPos2, lightPos3);
+                vec3 lights[3] = vec3[](lightPos0, lightPos1, lightPos2);
 
                 // Se itera por cada fuente de luz para calcular su contribucion
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 3; i++)
                 {   
                     // direccion a la fuente de luz de la iteacion actual
                     vec3 toLight = lights[i] - fragPosition;
@@ -265,7 +263,7 @@ class MultipleCelShaderProgram:
                     float diff = max(dot(normalizedNormal, lightDir), 0.0);
                     float level = floor(diff * levels);
                     diff = level/levels;
-                    vec3 diffuse = Kd * Ld * diff;
+                    vec3 diffuse = Kd * Ld[i] * diff;
                     
                     // specular
                     vec3 viewDir = normalize(viewPosition - fragPosition);
@@ -273,7 +271,7 @@ class MultipleCelShaderProgram:
                     float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
                     level = floor(spec* levels);
                     spec = level/levels;
-                    vec3 specular = Ks * Ls * spec;
+                    vec3 specular = Ks * Ls[i] * spec;
 
                     // attenuation
                     float distToLight = length(toLight);
@@ -372,12 +370,11 @@ class MultiplePhongSpotShaderProgram:
             vec3 lightPos0 = vec3(-1.5f, -1.5f, 2.3f); 
             vec3 lightPos1 = vec3(-1.5f, 1.5f, 2.3f);  
             vec3 lightPos2 = vec3(1.5f, -1.5f, 2.3f);  
-            vec3 lightPos3 = vec3(1.5f, 1.5f, 2.3f);   
 
             uniform vec3 viewPosition;
             uniform vec3 La;
-            uniform vec3 Ld;
-            uniform vec3 Ls;
+            uniform mat3 Ld;
+            uniform mat3 Ls;
             uniform vec3 Ka;
             uniform vec3 Kd;
             uniform vec3 Ks;
@@ -399,10 +396,10 @@ class MultiplePhongSpotShaderProgram:
                 vec3 result = vec3(0.0f, 0.0f, 0.0f);
 
                 // Vector que almacena las fuentes de luz
-                vec3 lights[4] = vec3[](lightPos0, lightPos1, lightPos2, lightPos3);
+                vec3 lights[3] = vec3[](lightPos0, lightPos1, lightPos2);
 
                 // Se itera por cada fuente de luz para calcular su contribucion
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 3; i++)
                 {   
                     // direccion a la fuente de luz de la iteacion actual
                     vec3 toLight = lights[i] - fragPosition;
@@ -410,13 +407,13 @@ class MultiplePhongSpotShaderProgram:
                     // Lo demas es exactamente igual
                     vec3 lightDir = normalize(toLight);
                     float diff = max(dot(normalizedNormal, lightDir), 0.0);
-                    vec3 diffuse = Kd * Ld * diff;
+                    vec3 diffuse = Kd * Ld[i] * diff;
                     
                     // specular
                     vec3 viewDir = normalize(viewPosition - fragPosition);
                     vec3 reflectDir = reflect(-lightDir, normalizedNormal);  
                     float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
-                    vec3 specular = Ks * Ls * spec;
+                    vec3 specular = Ks * Ls[i] * spec;
 
                     // attenuation
                     vec3 spotDir = vec3(0,0,1);
@@ -519,15 +516,14 @@ class MultipleSpotCelShaderProgram:
             in vec3 fragOriginalColor;
             
             // Posiciones de las fuentes de luz
-            vec3 lightPos0 = vec3(-1.5f, -1.5f, 2.3f); 
-            vec3 lightPos1 = vec3(-1.5f, 1.5f, 2.3f);  
-            vec3 lightPos2 = vec3(1.5f, -1.5f, 2.3f);  
-            vec3 lightPos3 = vec3(1.5f, 1.5f, 2.3f);   
+            vec3 lightPos0 = vec3(0.2f, 0.2f, 2.3f); 
+            vec3 lightPos1 = vec3(0.2f, -0.2f, 2.3f);  
+            vec3 lightPos2 = vec3(-0.2f, -0.2f, 2.3f);  
 
             uniform vec3 viewPosition;
             uniform vec3 La;
-            uniform vec3 Ld;
-            uniform vec3 Ls;
+            uniform mat3 Ld;
+            uniform mat3 Ls;
             uniform vec3 Ka;
             uniform vec3 Kd;
             uniform vec3 Ks;
@@ -551,10 +547,10 @@ class MultipleSpotCelShaderProgram:
                 vec3 result = vec3(0.0f, 0.0f, 0.0f);
 
                 // Vector que almacena las fuentes de luz
-                vec3 lights[4] = vec3[](lightPos0, lightPos1, lightPos2, lightPos3);
+                vec3 lights[3] = vec3[](lightPos0, lightPos1, lightPos2);
 
                 // Se itera por cada fuente de luz para calcular su contribucion
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 3; i++)
                 {   
                     // direccion a la fuente de luz de la iteacion actual
                     vec3 toLight = lights[i] - fragPosition;
@@ -564,7 +560,7 @@ class MultipleSpotCelShaderProgram:
                     float diff = max(dot(normalizedNormal, lightDir), 0.0);
                     float level = floor(diff*levels);
                     diff = level/levels;
-                    vec3 diffuse = Kd * Ld * diff;
+                    vec3 diffuse = Kd * Ld[i] * diff;
                     
                     // specular
                     vec3 viewDir = normalize(viewPosition - fragPosition);
@@ -572,7 +568,7 @@ class MultipleSpotCelShaderProgram:
                     float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
                     level = floor(spec*levels);
                     spec = level/levels;
-                    vec3 specular = Ks * Ls * spec;
+                    vec3 specular = Ks * Ls[i] * spec;
 
                     // attenuation
                     vec3 spotDir = vec3(0,0,1);
@@ -679,12 +675,11 @@ class MultipleTexturePhongShaderProgram:
             vec3 lightPos0 = vec3(-1.5f, -1.5f, 2.3f); 
             vec3 lightPos1 = vec3(-1.5f, 1.5f, 2.3f);  
             vec3 lightPos2 = vec3(1.5f, -1.5f, 2.3f);  
-            vec3 lightPos3 = vec3(1.5f, 1.5f, 2.3f);   
 
             uniform vec3 viewPosition; 
             uniform vec3 La;
-            uniform vec3 Ld;
-            uniform vec3 Ls;
+            uniform mat3 Ld;
+            uniform mat3 Ls;
             uniform vec3 Ka;
             uniform vec3 Kd;
             uniform vec3 Ks;
@@ -713,10 +708,10 @@ class MultipleTexturePhongShaderProgram:
                 vec3 result = vec3(0.0f, 0.0f, 0.0f);
                 
                 // Vector que almacena las fuentes de luz
-                vec3 lights[4] = vec3[](lightPos0, lightPos1, lightPos2, lightPos3);
+                vec3 lights[3] = vec3[](lightPos0, lightPos1, lightPos2);
 
                 // Se itera por cada fuente de luz para calcular su contribucion
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 3; i++)
                 {
                     // direccion a la fuente de luz de la iteacion actual
                     vec3 toLight = lights[i] - fragPosition;
@@ -724,13 +719,13 @@ class MultipleTexturePhongShaderProgram:
                     // Lo demas es exactamente igual
                     vec3 lightDir = normalize(toLight);
                     float diff = max(dot(normalizedNormal, lightDir), 0.0);
-                    vec3 diffuse = Kd * Ld * diff;
+                    vec3 diffuse = Kd * Ld[i] * diff;
                     
                     // specular
                     vec3 viewDir = normalize(viewPosition - fragPosition);
                     vec3 reflectDir = reflect(-lightDir, normalizedNormal);  
                     float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
-                    vec3 specular = Ks * Ls * spec;
+                    vec3 specular = Ks * Ls[i] * spec;
 
                     // attenuation
                     float distToLight = length(toLight);
@@ -830,13 +825,12 @@ class MultipleTextureCelShaderProgram:
             // Posiciones de las fuentes de luz
             vec3 lightPos0 = vec3(-1.5f, -1.5f, 2.3f); 
             vec3 lightPos1 = vec3(-1.5f, 1.5f, 2.3f);  
-            vec3 lightPos2 = vec3(1.5f, -1.5f, 2.3f);  
-            vec3 lightPos3 = vec3(1.5f, 1.5f, 2.3f);   
+            vec3 lightPos2 = vec3(1.5f, -1.5f, 2.3f);   
 
             uniform vec3 viewPosition; 
             uniform vec3 La;
-            uniform vec3 Ld;
-            uniform vec3 Ls;
+            uniform mat3 Ld;
+            uniform mat3 Ls;
             uniform vec3 Ka;
             uniform vec3 Kd;
             uniform vec3 Ks;
@@ -866,10 +860,10 @@ class MultipleTextureCelShaderProgram:
                 vec3 result = vec3(0.0f, 0.0f, 0.0f);
                 
                 // Vector que almacena las fuentes de luz
-                vec3 lights[4] = vec3[](lightPos0, lightPos1, lightPos2, lightPos3);
+                vec3 lights[3] = vec3[](lightPos0, lightPos1, lightPos2);
 
                 // Se itera por cada fuente de luz para calcular su contribucion
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 3; i++)
                 {
                     // direccion a la fuente de luz de la iteacion actual
                     vec3 toLight = lights[i] - fragPosition;
@@ -879,7 +873,7 @@ class MultipleTextureCelShaderProgram:
                     float diff = max(dot(normalizedNormal, lightDir), 0.0);
                     float level = floor(diff*levels);
                     diff = level/levels;
-                    vec3 diffuse = Kd * Ld * diff;
+                    vec3 diffuse = Kd * Ld[i] * diff;
                     
                     // specular
                     vec3 viewDir = normalize(viewPosition - fragPosition);
@@ -887,7 +881,7 @@ class MultipleTextureCelShaderProgram:
                     float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
                     level = floor(spec*levels);
                     spec = level/levels;
-                    vec3 specular = Ks * Ls * spec;
+                    vec3 specular = Ks * Ls[i] * spec;
 
                     // attenuation
                     float distToLight = length(toLight);
@@ -987,13 +981,12 @@ class MultipleTexturePhongSpotShaderProgram:
             // Posiciones de las fuentes de luz
             vec3 lightPos0 = vec3(-1.5f, -1.5f, 2.3f); 
             vec3 lightPos1 = vec3(-1.5f, 1.5f, 2.3f);  
-            vec3 lightPos2 = vec3(1.5f, -1.5f, 2.3f);  
-            vec3 lightPos3 = vec3(1.5f, 1.5f, 2.3f);   
+            vec3 lightPos2 = vec3(1.5f, -1.5f, 2.3f);   
 
             uniform vec3 viewPosition; 
             uniform vec3 La;
-            uniform vec3 Ld;
-            uniform vec3 Ls;
+            uniform mat3 Ld;
+            uniform mat3 Ls;
             uniform vec3 Ka;
             uniform vec3 Kd;
             uniform vec3 Ks;
@@ -1022,10 +1015,10 @@ class MultipleTexturePhongSpotShaderProgram:
                 vec3 result = vec3(0.0f, 0.0f, 0.0f);
                 
                 // Vector que almacena las fuentes de luz
-                vec3 lights[4] = vec3[](lightPos0, lightPos1, lightPos2, lightPos3);
+                vec3 lights[3] = vec3[](lightPos0, lightPos1, lightPos2);
 
                 // Se itera por cada fuente de luz para calcular su contribucion
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 3; i++)
                 {
                     // direccion a la fuente de luz de la iteacion actual
                     vec3 toLight = lights[i] - fragPosition;
@@ -1033,13 +1026,13 @@ class MultipleTexturePhongSpotShaderProgram:
                     // Lo demas es exactamente igual
                     vec3 lightDir = normalize(toLight);
                     float diff = max(dot(normalizedNormal, lightDir), 0.0);
-                    vec3 diffuse = Kd * Ld * diff;
+                    vec3 diffuse = Kd * Ld[i] * diff;
                     
                     // specular
                     vec3 viewDir = normalize(viewPosition - fragPosition);
                     vec3 reflectDir = reflect(-lightDir, normalizedNormal);  
                     float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
-                    vec3 specular = Ks * Ls * spec;
+                    vec3 specular = Ks * Ls[i] * spec;
 
                     // attenuation
                     vec3 spotDir = vec3(0,0,1);
@@ -1146,13 +1139,12 @@ class MultipleTextureSpotCelShaderProgram:
             // Posiciones de las fuentes de luz
             vec3 lightPos0 = vec3(-1.5f, -1.5f, 2.3f); 
             vec3 lightPos1 = vec3(-1.5f, 1.5f, 2.3f);  
-            vec3 lightPos2 = vec3(1.5f, -1.5f, 2.3f);  
-            vec3 lightPos3 = vec3(1.5f, 1.5f, 2.3f);   
+            vec3 lightPos2 = vec3(1.5f, -1.5f, 2.3f);     
 
             uniform vec3 viewPosition; 
             uniform vec3 La;
-            uniform vec3 Ld;
-            uniform vec3 Ls;
+            uniform mat3 Ld;
+            uniform mat3 Ls;
             uniform vec3 Ka;
             uniform vec3 Kd;
             uniform vec3 Ks;
@@ -1182,10 +1174,10 @@ class MultipleTextureSpotCelShaderProgram:
                 vec3 result = vec3(0.0f, 0.0f, 0.0f);
                 
                 // Vector que almacena las fuentes de luz
-                vec3 lights[4] = vec3[](lightPos0, lightPos1, lightPos2, lightPos3);
+                vec3 lights[3] = vec3[](lightPos0, lightPos1, lightPos2);
 
                 // Se itera por cada fuente de luz para calcular su contribucion
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 3; i++)
                 {
                     // direccion a la fuente de luz de la iteacion actual
                     vec3 toLight = lights[i] - fragPosition;
@@ -1203,7 +1195,7 @@ class MultipleTextureSpotCelShaderProgram:
                     float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
                     level = floor(spec*levels);
                     spec = level/levels;
-                    vec3 specular = Ks * Ls * spec;
+                    vec3 specular = Ks * Ls[i] * spec;
 
                     // attenuation
                     vec3 spotDir = vec3(0,0,1);
