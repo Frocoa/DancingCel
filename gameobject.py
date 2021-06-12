@@ -121,14 +121,14 @@ class GameObject:
 			child.clear()
 
 	# update
-	def update(self, deltaTime, camera,):
+	def update(self, deltaTime, camera):
 		self.time += deltaTime
 
-		self.update_transform()
-		self.draw(self.pipeline, "model", camera, )
+		self.update_transform(deltaTime, camera)
+		self.draw(self.pipeline, "model", camera)
 
 	# solo actualiza las coordenadas para poder llamar un gameobject hijo sin volver a dibujarlo
-	def update_transform(self):
+	def update_transform(self, delta, camera):
 
 		self.transform = tr.matmul([
 			tr.translate(self.position[0], self.position[1], self.position[2]),
@@ -142,7 +142,7 @@ class GameObject:
 
 		for child in self.childs:
 			if not isinstance(child, gs.GPUShape):
-				child.update_transform()
+				child.update_transform(delta, camera)
 
 	# dibuja al GameObject y a sus hijos
 	def draw(self, pipeline, transformName, camera, parentTransform=tr.identity()):

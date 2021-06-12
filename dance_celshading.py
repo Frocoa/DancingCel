@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
     # Las pipelines que se dan aqui son solo las default, luego se pueden cambiar
     character = nd.createCharacter(celPipeline, celTexPipeline)
-    scene = nd.createScene(celPipeline)
+    scene = nd.createScene(celPipeline, celTexPipeline)
 
     # Application loop
     while not glfw.window_should_close(window):

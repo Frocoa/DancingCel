@@ -1,37 +1,8 @@
 import meshes as mh
 from gameobject import GameObject
+from plane3d import Plane3D
 from character import Character
 from shapes3d import *
-
-
-def createScene(pipeline):
-    # Se crea la escena base
-
-    # Se crean las shapes en GPU
-    gpuGrayCube = createGPUShape(pipeline, bs.createColorNormalsCube(1.0,0.7,0.7)) # Shape del cubo gris
-
-    # Nodo del cubo gris
-    grayCube = GameObject("grayCube", pipeline)
-    grayCube.setModel(gpuGrayCube)
-
-    # Nodo del suelo de color gris
-    floor = GameObject("floor", pipeline)
-    floor.setPosition([0, 0, -1])
-    floor.addChilds([grayCube])
-
-    # Nodo de la escena para realizar un escalamiento
-    scene = GameObject("scene", pipeline)
-    scene.setPosition([0, 0, -1.5])
-    scene.setScale([5,5,1])
-    scene.addChilds([floor])
-
-    # Nodo final de la escena 
-    trScene = GameObject("trScene", pipeline)
-    trScene.addChilds([scene])
-
-    return trScene
-
-    
 
 def createTail(pipeline):
     tailMesh = mh.createTailMesh()
@@ -86,6 +57,13 @@ def createPlane(pipeline, nombre, texture_name):
 
     return plane
 
+def create3dPlane(pipeline, nombre, texture_name):
+    plane = Plane3D(nombre, pipeline)
+    path =  "assets/" + texture_name +".png"
+    plane.setModel(createTextureGPUShape(createTextureNormalPlane(), pipeline, path), True)
+
+    return plane
+
 def createCharacter(pipeline, tex_pipeline):
     bodyMesh = mh.createBodyMesh()
     legModel = createGPUShape(pipeline, createLegShape())
@@ -120,4 +98,36 @@ def createCharacter(pipeline, tex_pipeline):
     character.setTreesMaterial((0.3, 0.3, 0.3), (0.4, 0.4, 0.4), (0.01, 0.01, 0.01), 10) # Un material menos metalico 
     faceObject.setMaterial((0.7, 0.7, 0.7), (0.4, 0.4, 0.4), (0.01, 0.01, 0.01), 10) # Para que la carita siempre sea bien visible :)
 
-    return character    
+    return character
+
+def createScene(pipeline, tex_pipeline):
+    # Se crea la escena base
+
+    # Se crean las shapes en GPU
+    gpuGrayCube = createGPUShape(pipeline, bs.createColorNormalsCube(1.0,0.7,0.7)) # Shape del cubo gris
+    
+    # Arbol 3D
+    arbol3D = create3dPlane(tex_pipeline, "arbol", "tree")
+    arbol3D.setScale([1.0, 1.0, 1.3])
+    arbol3D.setPosition([-6.0, 3.0, -1.0])
+
+    # Nodo del cubo gris
+    grayCube = GameObject("grayCube", pipeline)
+    grayCube.setModel(gpuGrayCube)
+
+    # Nodo del suelo de color gris
+    floor = GameObject("floor", pipeline)
+    floor.setPosition([0, 0, -1])
+    floor.addChilds([grayCube])
+
+    # Nodo de la escena para realizar un escalamiento
+    scene = GameObject("scene", pipeline)
+    scene.setPosition([0, 0, -1.5])
+    scene.setScale([5,5,1])
+    scene.addChilds([floor])
+
+    # Nodo final de la escena 
+    trScene = GameObject("trScene", pipeline)
+    trScene.addChilds([scene, arbol3D])
+
+    return trScene        
