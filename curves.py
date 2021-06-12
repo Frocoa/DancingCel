@@ -10,6 +10,11 @@ def generateT(t):
 
 
 def hermiteMatrix(P1, P2, T1, T2):
+
+    P1 = np.array([P1]).T
+    P2 = np.array([P2]).T
+    T1 = np.array([T1]).T
+    T2 = np.array([T2]).T
     
     # Generate a matrix concatenating the columns
     G = np.concatenate((P1, P2, T1, T2), axis=1)

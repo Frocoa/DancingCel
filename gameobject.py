@@ -121,10 +121,10 @@ class GameObject:
 			child.clear()
 
 	# update
-	def update(self, deltaTime, camera):
-		self.time += deltaTime
+	def update(self, delta, camera):
+		self.time += delta
 
-		self.update_transform(deltaTime, camera)
+		self.update_transform(delta, camera)
 		self.draw(self.pipeline, "model", camera)
 
 	# solo actualiza las coordenadas para poder llamar un gameobject hijo sin volver a dibujarlo
