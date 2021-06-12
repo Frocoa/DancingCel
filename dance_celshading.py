@@ -1,10 +1,9 @@
 import glfw
 import math
 import OpenGL.GL.shaders
-import numpy as np
 import grafica.performance_monitor as pm
 import LightShaders as ls
-import meshes as mh
+import grafica.transformations as tr
 import nodes as nd
 from controller import Controller, on_key
 from camera import Camera
