@@ -21,7 +21,7 @@ class Character(GameObject):
 		#Curvas que usa para bailar
 		self.tailCurve = evalMultiCatCurve( [[0, 10, 0], [0, 0, 0], [5, 15, 0], [15, -15, 0], [20, 0, 0], [20, -10, 0]], self.N)		
 
-	def update(self, delta, camera):
+	def update(self, delta, camera, lights):
 		
 
 		
@@ -37,5 +37,5 @@ class Character(GameObject):
 		self.joint4.setRotation([joint_4_rot, 15, 0])
 		self.body.setRotation([0, 0, joint_1_rot])
 
-		GameObject.update(self, delta, camera)
+		GameObject.update(self, delta, camera, lights)
 		self.index += 1	

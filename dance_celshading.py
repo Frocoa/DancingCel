@@ -6,6 +6,7 @@ import LightShaders as ls
 import grafica.transformations as tr
 import nodes as nd
 from controller import Controller, on_key
+from light import Light
 from camera import Camera
 from gameobject import GameObject
 from shapes3d import *
@@ -65,6 +66,26 @@ if __name__ == "__main__":
     t0 = glfw.get_time()
     t_inicial = glfw.get_time()
 
+    # Se instancian las luces que se van a utilizar
+    lights = []
+
+    light1Coords = [[0, 0, 0], [0, 0, 3], [0, 0, 3],    [2, 2, 4],   [2, 0, 4],    [0, 0, 3],     [0, 0, 0]]
+    light1Colors = [[0, 0, 0], [100, 0, 0], [0.1, 0, 0], [-0.1, 0, 0], [-0.01, 0, 0], [0, 0, 0]]
+    light1 = Light(light1Coords, light1Colors)
+    lights.append(light1)
+    light2Coords = [[0, 0, 0], [0, 0, 3], [0, 0, 3],[-2 , 2, 4], [-2 , 0, 4],   [0, 0, 3], [0, 0, 0]]
+    light2Colors = [[0, 0, 0], [0, 100, 0], [0, 0.1, 0], [0, -0.1, 0], [0, -0.01, 0], [0, 0, 0]]
+    light2 = Light(light2Coords, light2Colors)
+    lights.append(light2)
+    light3Coords = [[0, 0, 0], [0, 0, 3], [0, 0, 3],[0, -2, 4], [-2, -2, 4], [0, 0, 3], [0, 0, 0]]
+    light3Colors = [[0, 0, 0], [0, 0, 100], [0, 0, 0.1], [0, 0, -0.1], [0, 0, -0.01], [0, 0, 0]]
+    light3 = Light(light3Coords, light3Colors)
+    lights.append(light3)
+
+    light1.setPosition([2, 2, 3])
+    light2.setPosition([-2, -2, 3])
+    light3.setPosition([0, 0, 6]) 
+
     # Las pipelines que se dan aqui son solo las default, luego se pueden cambiar
     character = nd.createCharacter(celPipeline, celTexPipeline)
     scene = nd.createScene(celPipeline, celTexPipeline)
@@ -91,15 +112,19 @@ if __name__ == "__main__":
 
         # Filling or not the shapes depending on the controller state
         if (controller.is_tab_pressed):
-            character.changeTreesPipeline(phongPipeline, phongTexPipeline)
-            scene.changeTreesPipeline(phongPipeline, phongTexPipeline)
+            character.changeTreesPipeline(phongSpotPipeline, phongTexSpotPipeline)
+            scene.changeTreesPipeline(phongSpotPipeline, phongTexSpotPipeline)
         else:
-            character.changeTreesPipeline(celPipeline, celTexPipeline)
-            scene.changeTreesPipeline(celPipeline, celTexPipeline)
+            character.changeTreesPipeline(celSpotPipeline, celTexSpotPipeline)
+            scene.changeTreesPipeline(celSpotPipeline, celTexSpotPipeline)
+
+        ########          Luz         #######
+        for light in lights:
+            light.update(delta)
 
         ########          Dibujo          ########
-        scene.update(delta, camera)
-        character.update(delta, camera)
+        scene.update(delta, camera, lights)
+        character.update(delta, camera, lights)
 
         # Once the drawing is rendered, buffers are swap so an uncomplete drawing is never seen.
         glfw.swap_buffers(window)

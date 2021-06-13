@@ -2,16 +2,23 @@ from OpenGL.GL import *
 import numpy as np
 
 # Componentes aportados por la fuente de luz
-def setLightUniforms(pipeline, La = [0.25, 0.25, 0.25] , Ld = [0.0, 0.0, 0.0], Ls = [1.0, 1.0, 1.0]):
+def setLightUniforms(pipeline, lights):
+
+        light1 = lights[0]
+        light2 = lights[1]
+        light3 = lights[2]
         
         glUseProgram(pipeline.shaderProgram)
-        glUniform3f(glGetUniformLocation(pipeline.shaderProgram, "La"), La[0], La[1], La[2]) # Componente ambiental de cada luz
+        glUniform3f(glGetUniformLocation(pipeline.shaderProgram, "La"), 0.65, 0.65, 0.65) # Componente ambiental de cada luz
 
         glUniformMatrix3fv(glGetUniformLocation(pipeline.shaderProgram, "Ld"), 1, GL_TRUE, \
-        np.array([[0.95, Ld[1], Ld[2]], [Ld[0], 0.95, Ld[2]], [Ld[0], Ld[1], 0.95]]).T) # Componente difusa de cada luz
+        np.array([light1.Ld, light2.Ld, light3.Ld]).T) # Componente difusa de cada luz
 
         glUniformMatrix3fv(glGetUniformLocation(pipeline.shaderProgram, "Ls"), 1, GL_TRUE, \
-        np.array([[0.95, Ls[1], Ls[2]], [Ls[0], 0.95, Ls[2]], [Ls[0], Ls[1], 0.95]]).T) # Componente especular de cada luz
+        np.array([light1.Ls, light2.Ls, light3.Ls]).T) # Componente especular de cada luz
+
+        glUniformMatrix3fv(glGetUniformLocation(pipeline.shaderProgram, "lightPos"), 1, GL_TRUE, \
+        np.array([light1.position, light2.position, light3.position]).T) # Componente especular de cada luz
 
         glUniform1f(glGetUniformLocation(pipeline.shaderProgram, "constantAttenuation"), 0.01)
         glUniform1f(glGetUniformLocation(pipeline.shaderProgram, "quadraticAttenuation"), 0.05)

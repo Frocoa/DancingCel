@@ -85,6 +85,7 @@ class MultiplePhongShaderProgram:
             uniform vec3 La;
             uniform mat3 Ld;
             uniform mat3 Ls;
+            uniform mat3 lightPos;
             uniform vec3 Ka;
             uniform vec3 Kd;
             uniform vec3 Ks;
@@ -105,14 +106,11 @@ class MultiplePhongShaderProgram:
                 // Vector para sumar la contribucion de cada fuente de luz
                 vec3 result = vec3(0.0f, 0.0f, 0.0f);
 
-                // Vector que almacena las fuentes de luz
-                vec3 lights[3] = vec3[](lightPos0, lightPos1, lightPos2);
-
                 // Se itera por cada fuente de luz para calcular su contribucion
                 for (int i = 0; i < 3; i++)
                 {   
                     // direccion a la fuente de luz de la iteacion actual
-                    vec3 toLight = lights[i] - fragPosition;
+                    vec3 toLight = lightPos[i] - fragPosition;
 
                     // Lo demas es exactamente igual
                     vec3 lightDir = normalize(toLight);
@@ -227,6 +225,7 @@ class MultipleCelShaderProgram:
             uniform vec3 La;
             uniform mat3 Ld;
             uniform mat3 Ls;
+            uniform mat3 lightPos;
             uniform vec3 Ka;
             uniform vec3 Kd;
             uniform vec3 Ks;
@@ -249,14 +248,11 @@ class MultipleCelShaderProgram:
                 // Vector para sumar la contribucion de cada fuente de luz
                 vec3 result = vec3(0.0f, 0.0f, 0.0f);
 
-                // Vector que almacena las fuentes de luz
-                vec3 lights[3] = vec3[](lightPos0, lightPos1, lightPos2);
-
                 // Se itera por cada fuente de luz para calcular su contribucion
                 for (int i = 0; i < 3; i++)
                 {   
                     // direccion a la fuente de luz de la iteacion actual
-                    vec3 toLight = lights[i] - fragPosition;
+                    vec3 toLight = lightPos[i] - fragPosition;
 
                     // Lo demas es exactamente igual
                     vec3 lightDir = normalize(toLight);
@@ -375,6 +371,7 @@ class MultiplePhongSpotShaderProgram:
             uniform vec3 La;
             uniform mat3 Ld;
             uniform mat3 Ls;
+            uniform mat3 lightPos;
             uniform vec3 Ka;
             uniform vec3 Kd;
             uniform vec3 Ks;
@@ -395,14 +392,11 @@ class MultiplePhongSpotShaderProgram:
                 // Vector para sumar la contribucion de cada fuente de luz
                 vec3 result = vec3(0.0f, 0.0f, 0.0f);
 
-                // Vector que almacena las fuentes de luz
-                vec3 lights[3] = vec3[](lightPos0, lightPos1, lightPos2);
-
                 // Se itera por cada fuente de luz para calcular su contribucion
                 for (int i = 0; i < 3; i++)
                 {   
                     // direccion a la fuente de luz de la iteacion actual
-                    vec3 toLight = lights[i] - fragPosition;
+                    vec3 toLight = lightPos[i] - fragPosition;
 
                     // Lo demas es exactamente igual
                     vec3 lightDir = normalize(toLight);
@@ -524,6 +518,7 @@ class MultipleSpotCelShaderProgram:
             uniform vec3 La;
             uniform mat3 Ld;
             uniform mat3 Ls;
+            uniform mat3 lightPos;
             uniform vec3 Ka;
             uniform vec3 Kd;
             uniform vec3 Ks;
@@ -546,14 +541,11 @@ class MultipleSpotCelShaderProgram:
                 // Vector para sumar la contribucion de cada fuente de luz
                 vec3 result = vec3(0.0f, 0.0f, 0.0f);
 
-                // Vector que almacena las fuentes de luz
-                vec3 lights[3] = vec3[](lightPos0, lightPos1, lightPos2);
-
                 // Se itera por cada fuente de luz para calcular su contribucion
                 for (int i = 0; i < 3; i++)
                 {   
                     // direccion a la fuente de luz de la iteacion actual
-                    vec3 toLight = lights[i] - fragPosition;
+                    vec3 toLight = lightPos[i] - fragPosition;
 
                     // Lo demas es exactamente igual
                     vec3 lightDir = normalize(toLight);
@@ -680,6 +672,7 @@ class MultipleTexturePhongShaderProgram:
             uniform vec3 La;
             uniform mat3 Ld;
             uniform mat3 Ls;
+            uniform mat3 lightPos;
             uniform vec3 Ka;
             uniform vec3 Kd;
             uniform vec3 Ks;
@@ -706,15 +699,13 @@ class MultipleTexturePhongShaderProgram:
 
                 // Vector para sumar la contribucion de cada fuente de luz
                 vec3 result = vec3(0.0f, 0.0f, 0.0f);
-                
-                // Vector que almacena las fuentes de luz
-                vec3 lights[3] = vec3[](lightPos0, lightPos1, lightPos2);
+
 
                 // Se itera por cada fuente de luz para calcular su contribucion
                 for (int i = 0; i < 3; i++)
                 {
                     // direccion a la fuente de luz de la iteacion actual
-                    vec3 toLight = lights[i] - fragPosition;
+                    vec3 toLight = lightPos[i] - fragPosition;
 
                     // Lo demas es exactamente igual
                     vec3 lightDir = normalize(toLight);
@@ -831,6 +822,7 @@ class MultipleTextureCelShaderProgram:
             uniform vec3 La;
             uniform mat3 Ld;
             uniform mat3 Ls;
+            uniform mat3 lightPos;
             uniform vec3 Ka;
             uniform vec3 Kd;
             uniform vec3 Ks;
@@ -858,15 +850,12 @@ class MultipleTextureCelShaderProgram:
 
                 // Vector para sumar la contribucion de cada fuente de luz
                 vec3 result = vec3(0.0f, 0.0f, 0.0f);
-                
-                // Vector que almacena las fuentes de luz
-                vec3 lights[3] = vec3[](lightPos0, lightPos1, lightPos2);
 
                 // Se itera por cada fuente de luz para calcular su contribucion
                 for (int i = 0; i < 3; i++)
                 {
                     // direccion a la fuente de luz de la iteacion actual
-                    vec3 toLight = lights[i] - fragPosition;
+                    vec3 toLight = lightPos[i] - fragPosition;
 
                     // Lo demas es exactamente igual
                     vec3 lightDir = normalize(toLight);
@@ -987,6 +976,7 @@ class MultipleTexturePhongSpotShaderProgram:
             uniform vec3 La;
             uniform mat3 Ld;
             uniform mat3 Ls;
+            uniform mat3 lightPos;
             uniform vec3 Ka;
             uniform vec3 Kd;
             uniform vec3 Ks;
@@ -1013,15 +1003,12 @@ class MultipleTexturePhongSpotShaderProgram:
 
                 // Vector para sumar la contribucion de cada fuente de luz
                 vec3 result = vec3(0.0f, 0.0f, 0.0f);
-                
-                // Vector que almacena las fuentes de luz
-                vec3 lights[3] = vec3[](lightPos0, lightPos1, lightPos2);
 
                 // Se itera por cada fuente de luz para calcular su contribucion
                 for (int i = 0; i < 3; i++)
                 {
                     // direccion a la fuente de luz de la iteacion actual
-                    vec3 toLight = lights[i] - fragPosition;
+                    vec3 toLight = lightPos[i] - fragPosition;
 
                     // Lo demas es exactamente igual
                     vec3 lightDir = normalize(toLight);
@@ -1145,6 +1132,7 @@ class MultipleTextureSpotCelShaderProgram:
             uniform vec3 La;
             uniform mat3 Ld;
             uniform mat3 Ls;
+            uniform mat3 lightPos;
             uniform vec3 Ka;
             uniform vec3 Kd;
             uniform vec3 Ks;
@@ -1172,15 +1160,12 @@ class MultipleTextureSpotCelShaderProgram:
 
                 // Vector para sumar la contribucion de cada fuente de luz
                 vec3 result = vec3(0.0f, 0.0f, 0.0f);
-                
-                // Vector que almacena las fuentes de luz
-                vec3 lights[3] = vec3[](lightPos0, lightPos1, lightPos2);
 
                 // Se itera por cada fuente de luz para calcular su contribucion
                 for (int i = 0; i < 3; i++)
                 {
                     // direccion a la fuente de luz de la iteacion actual
-                    vec3 toLight = lights[i] - fragPosition;
+                    vec3 toLight = lightPos[i] - fragPosition;
 
                     // Lo demas es exactamente igual
                     vec3 lightDir = normalize(toLight);

@@ -121,11 +121,11 @@ class GameObject:
 			child.clear()
 
 	# update
-	def update(self, delta, camera):
+	def update(self, delta, camera, lights):
 		self.time += delta
 
 		self.update_transform(delta, camera)
-		self.draw(self.pipeline, "model", camera)
+		self.draw(self.pipeline, "model", camera, lights)
 
 	# solo actualiza las coordenadas para poder llamar un gameobject hijo sin volver a dibujarlo
 	def update_transform(self, delta, camera):
@@ -145,7 +145,7 @@ class GameObject:
 				child.update_transform(delta, camera)
 
 	# dibuja al GameObject y a sus hijos
-	def draw(self, pipeline, transformName, camera, parentTransform=tr.identity()):
+	def draw(self, pipeline, transformName, camera, lights, parentTransform=tr.identity()):
 
 		# Composing the transformations through this path
 		newTransform = np.matmul(parentTransform, self.transform)
@@ -155,7 +155,7 @@ class GameObject:
 		if len(self.childs) == 1 and isinstance(self.childs[0], gs.GPUShape):
 		    leaf = self.childs[0]
 
-		    uh.setLightUniforms(pipeline)
+		    uh.setLightUniforms(pipeline, lights)
 		    uh.setMaterialUniforms(pipeline, self.Ka, self.Kd, self.Ks, self.shininess)
 		    uh.setCameraUniforms(pipeline, camera, camera.projection, camera.viewMatrix )
 		    glUniformMatrix4fv(glGetUniformLocation(pipeline.shaderProgram, transformName), 1, GL_TRUE, newTransform)
@@ -171,7 +171,7 @@ class GameObject:
 		# so this draw function is called recursively
 		else:
 		    for child in self.childs:
-		        child.draw(child.pipeline, transformName, camera, newTransform)
+		        child.draw(child.pipeline, transformName, camera, lights, newTransform)
 
 
 		
