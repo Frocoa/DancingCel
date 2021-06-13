@@ -48,6 +48,12 @@ if __name__ == "__main__":
     phongTexSpotPipeline = ls.MultipleTexturePhongSpotShaderProgram()
     celTexSpotPipeline = ls.MultipleTextureSpotCelShaderProgram()
 
+    # Se decide que tipo de luces se van a usar
+    phong = phongSpotPipeline
+    phongTex = phongTexSpotPipeline
+    cel = celSpotPipeline
+    celTex = celTexSpotPipeline
+
     # Setting up the clear screen color
     glClearColor(0.85, 0.85, 0.85, 1.0)
 
@@ -69,25 +75,21 @@ if __name__ == "__main__":
     # Se instancian las luces que se van a utilizar
     lights = []
 
-    light1Coords = [[0, 0, 0], [0, 0, 3], [0, 0, 3],    [2, 2, 4],   [2, 0, 4],    [0, 0, 3],     [0, 0, 0]]
-    light1Colors = [[0, 0, 0], [100, 0, 0], [0.1, 0, 0], [-0.1, 0, 0], [-0.01, 0, 0], [0, 0, 0]]
-    light1 = Light(light1Coords, light1Colors)
+    light1Coords = [[0, 0, 0], [0, 0, 2.5], [0, 0, 2.5],    [2, 2, 4],   [2, 0, 4],    [0, 0, 2.5],     [0, 0, 0]]
+    light1Colors = [[0, 0, 0], [0.01, 0, 0], [0.03, 0, 0], [-0.03, 0, 0], [-0.01, 0, 0], [0, 0, 0]]
+    light1 = Light(controller, light1Coords, light1Colors)
     lights.append(light1)
-    light2Coords = [[0, 0, 0], [0, 0, 3], [0, 0, 3],[-2 , 2, 4], [-2 , 0, 4],   [0, 0, 3], [0, 0, 0]]
-    light2Colors = [[0, 0, 0], [0, 100, 0], [0, 0.1, 0], [0, -0.1, 0], [0, -0.01, 0], [0, 0, 0]]
-    light2 = Light(light2Coords, light2Colors)
+    light2Coords = [[0, 0, 0], [0, 0, 2.5], [0, 0, 2.5],[-2 , 2, 4], [-2 , 0, 4],   [0, 0, 2.5], [0, 0, 0]]
+    light2Colors = [[0, 0, 0], [0, 0.01, 0], [0, 0.03, 0], [0, -0.03, 0], [0, -0.01, 0], [0, 0, 0]]
+    light2 = Light(controller, light2Coords, light2Colors)
     lights.append(light2)
-    light3Coords = [[0, 0, 0], [0, 0, 3], [0, 0, 3],[0, -2, 4], [-2, -2, 4], [0, 0, 3], [0, 0, 0]]
-    light3Colors = [[0, 0, 0], [0, 0, 100], [0, 0, 0.1], [0, 0, -0.1], [0, 0, -0.01], [0, 0, 0]]
-    light3 = Light(light3Coords, light3Colors)
+    light3Coords = [[0, 0, 0], [0, 0, 2.5], [0, 0, 2.5],[0, -2, 4], [-2, -2, 4], [0, 0, 2.5], [0, 0, 0]]
+    light3Colors = [[0, 0, 0], [0, 0, 0.01], [0, 0, 0.03], [0, 0, -0.03], [0, 0, -0.01], [0, 0, 0]]
+    light3 = Light(controller, light3Coords, light3Colors)
     lights.append(light3)
 
-    light1.setPosition([2, 2, 3])
-    light2.setPosition([-2, -2, 3])
-    light3.setPosition([0, 0, 6]) 
-
     # Las pipelines que se dan aqui son solo las default, luego se pueden cambiar
-    character = nd.createCharacter(celPipeline, celTexPipeline)
+    Maru = nd.createCharacter(celPipeline, celTexPipeline, controller)
     scene = nd.createScene(celPipeline, celTexPipeline)
 
     # Application loop
@@ -110,13 +112,25 @@ if __name__ == "__main__":
         perfMonitor.update(glfw.get_time())
         glfw.set_window_title(window, title + str(perfMonitor))
 
-        # Filling or not the shapes depending on the controller state
-        if (controller.is_tab_pressed):
-            character.changeTreesPipeline(phongSpotPipeline, phongTexSpotPipeline)
-            scene.changeTreesPipeline(phongSpotPipeline, phongTexSpotPipeline)
+        # Se cambian las luces entre spot y normales
+        if (controller.is_3_pressed):
+            phong = phongSpotPipeline
+            phongTex = phongTexSpotPipeline
+            cel = celSpotPipeline
+            celTex = celTexSpotPipeline
         else:
-            character.changeTreesPipeline(celSpotPipeline, celTexSpotPipeline)
-            scene.changeTreesPipeline(celSpotPipeline, celTexSpotPipeline)
+            phong = phongPipeline
+            phongTex = phongTexPipeline
+            cel = celPipeline
+            celTex = celTexPipeline    
+
+        # Se cambia entre phong y cel
+        if (controller.is_tab_pressed):
+            Maru.changeTreesPipeline(phong, phongTex)
+            scene.changeTreesPipeline(phong, phongTex)
+        else:
+            Maru.changeTreesPipeline(cel, celTex)
+            scene.changeTreesPipeline(cel, celTex)
 
         ########          Luz         #######
         for light in lights:
@@ -124,12 +138,12 @@ if __name__ == "__main__":
 
         ########          Dibujo          ########
         scene.update(delta, camera, lights)
-        character.update(delta, camera, lights)
+        Maru.update(delta, camera, lights)
 
         # Once the drawing is rendered, buffers are swap so an uncomplete drawing is never seen.
         glfw.swap_buffers(window)
 
     scene.clear()
-    character.clear()
+    Maru.clear()
 
     glfw.terminate()

@@ -20,7 +20,7 @@ def createTextureGPUShape(shape, pipeline, path):
     pipeline.setupVAO(gpuShape)
     gpuShape.fillBuffers(shape.vertices, shape.indices, GL_STATIC_DRAW)
     gpuShape.texture = ls.textureSimpleSetup(
-        path, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST)
+        path, GL_REPEAT, GL_REPEAT, GL_NEAREST, GL_NEAREST)
     return gpuShape
 
 def createTextureNormalPlane():  
@@ -43,7 +43,7 @@ def createTextureNormalPlane():
 def createLegShape():
     # esta hecho para ser dibujado con lineas
     # va a tener una articulacion doble para que pueda 
-    # doblar la rodilla utilizando dibujo dinamico
+    # doblar la rodilla utilizando dibujo dinamico (al final no lo hice)
     vertices = [
              0,     0,  0.5,  0, 0, 0,
              0,     0,  0.0,  0, 0, 0,
@@ -55,4 +55,14 @@ def createLegShape():
             1, 2,
             2, 3]     
 
-    return bs.Shape(vertices, indices)        
+    return bs.Shape(vertices, indices)
+
+def createArmShape():
+    # debe ser dibujado con lineas
+    vertices = [
+              0.0, -0.5, 0, 0, 0, 0,
+              0.0,  0.5, 0, 0, 0, 0]
+
+    indices = [0, 1]
+
+    return bs.Shape(vertices, indices)                      

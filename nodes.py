@@ -90,9 +90,10 @@ def create3dPlane(pipeline, nombre, texture_name):
 
     return plane
 
-def createCharacter(pipeline, tex_pipeline):
+def createCharacter(pipeline, tex_pipeline, controller):
     bodyMesh = mh.createBodyMesh()
     legModel = createGPUShape(pipeline, createLegShape())
+    armModel = createGPUShape(pipeline, createArmShape())
     faceObject = createPlane(tex_pipeline, "face", "smile" )
     tailObject = createTail(pipeline)
 
@@ -103,26 +104,58 @@ def createCharacter(pipeline, tex_pipeline):
 
     leg1Object = GameObject("leg1", pipeline)
     leg1Object.setModel(legModel)
-    leg1Object.setPosition([0, -0.2, -0.8])
+    leg1Object.setPosition([0, 0, -0.4])
     leg1Object.setRotation([0, 0, 180])
     leg1Object.setDrawType("lines")
 
+    leg1Joint = GameObject("leg1joint", pipeline)
+    leg1Joint.setPosition([0, -0.2, -0.4])
+    leg1Joint.setRotation([0, 0, 0])
+    leg1Joint.addChilds([leg1Object])
+
     leg2Object = GameObject("leg2", pipeline)
     leg2Object.setModel(legModel)
-    leg2Object.setPosition([0, 0.2, -0.8])
+    leg2Object.setPosition([0, 0, -0.4])
     leg2Object.setRotation([0, 0, -90])
     leg2Object.setDrawType("lines")
+
+    leg2Joint = GameObject("leg2joint", pipeline)
+    leg2Joint.setPosition([0, 0.2, -0.4])
+    leg2Joint.setRotation([0, 0, 0])
+    leg2Joint.addChilds([leg2Object])
+
+    legs = GameObject("legs", pipeline)
+    legs.addChilds([leg1Joint, leg2Joint])
+    legs.setPosition([0, 0, 0])
+
+    leftArm = GameObject("arm1", pipeline)
+    leftArm.setDrawType("lines")
+    leftArm.setModel(armModel)
+    leftArm.setPosition([0, 0.5, 0])
+
+    leftJoint = GameObject("ljoint", pipeline)
+    leftJoint.setPosition([0, 0.5, 0])
+    leftJoint.addChilds([leftArm])
+
+    rightArm = GameObject("arm2", pipeline)
+    rightArm.setDrawType("lines")
+    rightArm.setModel(armModel)
+    rightArm.setPosition([0, -0.25, 0])
+
+    rightJoint = GameObject("rjoint", pipeline)
+    rightJoint.setPosition([0, -0.20, 0])
+    rightJoint.addChilds([rightArm])
 
     faceObject.setPosition([0.57, 0, 0])
     faceObject.setRotation([0, 0, 90])
 
-    body = GameObject("body", pipeline)
-    body.addChilds([torsoShape, faceObject])
+    body = GameObject("body", pipeline,)
+    body.addChilds([torsoShape, faceObject, tailObject, rightJoint, leftJoint])
 
-    character = Character(pipeline, [body, tailObject,leg1Object, leg2Object]) 
+    character = Character(pipeline, [body, legs], controller) 
     character.setPosition([0, 0, -1])
     character.setTreesMaterial((0.3, 0.3, 0.3), (0.4, 0.4, 0.4), (0.01, 0.01, 0.01), 10) # Un material menos metalico 
-    faceObject.setMaterial((0.7, 0.7, 0.7), (0.4, 0.4, 0.4), (0.01, 0.01, 0.01), 10) # Para que la carita siempre sea bien visible :)
+    faceObject.setMaterial((0.7, 0.7, 0.7), (0.4, 0.4, 0.4), (0.01, 0.00, 0.00), 10) # Para que la carita siempre sea bien visible :)
 
     return character
 
