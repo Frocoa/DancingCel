@@ -75,12 +75,6 @@ class MultiplePhongShaderProgram:
             in vec3 fragNormal;
             in vec3 fragPosition;
             in vec3 fragOriginalColor;
-            
-            // Posiciones de las fuentes de luz
-            vec3 lightPos0 = vec3(-1.5f, -1.5f, 2.3f); 
-            vec3 lightPos1 = vec3(-1.5f, 1.5f, 2.3f);  
-            vec3 lightPos2 = vec3(1.5f, -1.5f, 2.3f);    
-
             uniform vec3 viewPosition;
             uniform vec3 La;
             uniform mat3 Ld;
@@ -216,11 +210,6 @@ class MultipleCelShaderProgram:
             in vec3 fragPosition;
             in vec3 fragOriginalColor;
             
-            // Posiciones de las fuentes de luz
-            vec3 lightPos0 = vec3(3.0f, 0.0f, 0.0f); 
-            vec3 lightPos1 = vec3(-3.0f, 0.0f, 0.0f);  
-            vec3 lightPos2 = vec3(0.0f, 0.0f, 2.0f);  
-
             uniform vec3 viewPosition;
             uniform vec3 La;
             uniform mat3 Ld;
@@ -362,11 +351,6 @@ class MultiplePhongSpotShaderProgram:
             in vec3 fragPosition;
             in vec3 fragOriginalColor;
             
-            // Posiciones de las fuentes de luz
-            vec3 lightPos0 = vec3(-1.5f, -1.5f, 2.3f); 
-            vec3 lightPos1 = vec3(-1.5f, 1.5f, 2.3f);  
-            vec3 lightPos2 = vec3(1.5f, -1.5f, 2.3f);  
-
             uniform vec3 viewPosition;
             uniform vec3 La;
             uniform mat3 Ld;
@@ -509,11 +493,6 @@ class MultipleSpotCelShaderProgram:
             in vec3 fragPosition;
             in vec3 fragOriginalColor;
             
-            // Posiciones de las fuentes de luz
-            vec3 lightPos0 = vec3(0.2f, 0.2f, 2.3f); 
-            vec3 lightPos1 = vec3(0.2f, -0.2f, 2.3f);  
-            vec3 lightPos2 = vec3(-0.2f, -0.2f, 2.3f);  
-
             uniform vec3 viewPosition;
             uniform vec3 La;
             uniform mat3 Ld;
@@ -663,10 +642,6 @@ class MultipleTexturePhongShaderProgram:
             in vec2 fragTexCoords;
 
             out vec4 fragColor;
-            // Posiciones de las fuentes de luz
-            vec3 lightPos0 = vec3(-1.5f, -1.5f, 2.3f); 
-            vec3 lightPos1 = vec3(-1.5f, 1.5f, 2.3f);  
-            vec3 lightPos2 = vec3(1.5f, -1.5f, 2.3f);  
 
             uniform vec3 viewPosition; 
             uniform vec3 La;
@@ -813,11 +788,6 @@ class MultipleTextureCelShaderProgram:
             in vec2 fragTexCoords;
 
             out vec4 fragColor;
-            // Posiciones de las fuentes de luz
-            vec3 lightPos0 = vec3(-1.5f, -1.5f, 2.3f); 
-            vec3 lightPos1 = vec3(-1.5f, 1.5f, 2.3f);  
-            vec3 lightPos2 = vec3(1.5f, -1.5f, 2.3f);   
-
             uniform vec3 viewPosition; 
             uniform vec3 La;
             uniform mat3 Ld;
@@ -967,11 +937,6 @@ class MultipleTexturePhongSpotShaderProgram:
             in vec2 fragTexCoords;
 
             out vec4 fragColor;
-            // Posiciones de las fuentes de luz
-            vec3 lightPos0 = vec3(-1.5f, -1.5f, 2.3f); 
-            vec3 lightPos1 = vec3(-1.5f, 1.5f, 2.3f);  
-            vec3 lightPos2 = vec3(1.5f, -1.5f, 2.3f);   
-
             uniform vec3 viewPosition; 
             uniform vec3 La;
             uniform mat3 Ld;
@@ -1123,11 +1088,6 @@ class MultipleTextureSpotCelShaderProgram:
             in vec2 fragTexCoords;
 
             out vec4 fragColor;
-            // Posiciones de las fuentes de luz
-            vec3 lightPos0 = vec3(-1.5f, -1.5f, 2.3f); 
-            vec3 lightPos1 = vec3(-1.5f, 1.5f, 2.3f);  
-            vec3 lightPos2 = vec3(1.5f, -1.5f, 2.3f);     
-
             uniform vec3 viewPosition; 
             uniform vec3 La;
             uniform mat3 Ld;

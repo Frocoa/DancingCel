@@ -5,6 +5,7 @@ import math
 from OpenGL.GL import *
 import grafica.basic_shapes as bs
 import LightShaders as ls
+import curves as cv
 import grafica.gpu_shape as gs
 
 def createGPUShape(pipeline, shape):
@@ -37,6 +38,46 @@ def createTextureNormalPlane():
     indices = [
          0, 1, 2,
          2, 3, 0]
+
+    return bs.Shape(vertices, indices)
+
+# Aqui se usa Hermite y Bezier    
+def createMoon():
+    P0 = [0.5, 0, 0]
+    P1 = [-0.5, 0, 0]
+    P2 = [-0.5, 0, 1]
+    P3 = [0.5, 0, 1]
+    P4 = [0.5, 0, 0]
+    P5 = [0.5, 0, 1]
+    T1 = [-0.3, 0, 0]
+    T2 = [1.3, 0, 1]
+    Bezier = cv.bezierMatrix(P0, P1, P2, P3)
+    Hermite = cv.hermiteMatrix(P4, P5, T1, T2)
+
+    bCurve = cv.evalCurve(Bezier, 50)
+    hCurve = cv.evalCurve(Hermite, 50)
+
+    vertices = []
+    indices = []
+    counter = 0
+
+    for i in range(len(bCurve)-1):
+        cb1 = bCurve[i]
+        cb2 = bCurve[i+1]
+        ch1 = hCurve[i]
+        ch2 = hCurve[i+1]
+
+        vertices += [cb1[0], 0, cb1[2], 240/255, 196/255, 32/255]
+        vertices += [ch1[0], 0, ch1[2], 240/255, 196/255, 32/255]
+        vertices += [cb2[0], 0, cb2[2], 240/255, 196/255, 32/255]
+        vertices += [ch1[0], 0, ch1[2], 240/255, 196/255, 32/255]
+        vertices += [cb2[0], 0, cb2[2], 240/255, 196/255, 32/255]
+        vertices += [ch2[0], 0, ch2[2], 240/255, 196/255, 32/255]
+
+        indices += [
+                    0+counter, 1+counter, 2+counter,
+                    3+counter, 4+counter, 5+counter]
+        counter += 6     
 
     return bs.Shape(vertices, indices)
 

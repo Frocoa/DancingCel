@@ -26,6 +26,11 @@ def hermiteMatrix(P1, P2, T1, T2):
 
 
 def bezierMatrix(P0, P1, P2, P3):
+
+    P0 = np.array([P0]).T
+    P1 = np.array([P1]).T
+    P2 = np.array([P2]).T
+    P3 = np.array([P3]).T
     
     # Generate a matrix concatenating the columns
     G = np.concatenate((P0, P1, P2, P3,), axis=1)

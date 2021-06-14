@@ -1,4 +1,5 @@
 import openmesh
+import math
 import numpy as np
 import grafica.basic_shapes as bs
 
@@ -121,6 +122,50 @@ def createBodyMesh(textured=False):
 
 	return mesh
 
+def terreno(x, y):
+	return math.sin(10*(x**2 + y ** 2))/10
+
+def terrenoMesh(N):
+
+    # Creamos arreglos entre -5 y 5, de tamaño N
+    xs = np.linspace(-1, 1, N)
+    ys = np.linspace(-1, 1, N)
+
+    # Creamos una malla de triangulos
+    mesh = openmesh.TriMesh()
+
+    # Generamos un vertice para cada x,y,z
+    for i in range(len(xs)):
+        for j in range(len(ys)):
+            x = xs[i]
+            y = ys[j]
+            z = terreno(x, y)
+            
+            # Agregamos el vertice a la malla
+            mesh.add_vertex([x, y, z])
+
+    # Podemos calcular el indice de cada punto (i,j) de la siguiente manera
+    index = lambda i, j: i*len(ys) + j 
+    
+    # Obtenemos los vertices
+    vertexs = list(mesh.vertices())
+
+    # Creamos caras para cada cuadrado de la malla
+    for i in range(len(xs)-1):
+        for j in range(len(ys)-1):
+
+            # Conseguimos los indices por cada cuadrado
+            isw = index(i,j)
+            ise = index(i+1,j)
+            ine = index(i+1,j+1)
+            inw = index(i,j+1)
+
+            mesh.add_face(vertexs[isw], vertexs[ise], vertexs[ine])
+            mesh.add_face(vertexs[ine], vertexs[inw], vertexs[isw])
+
+        
+
+    return mesh
 
 def toShape(mesh, color=None, textured=False, verbose=False):
     assert isinstance(mesh, openmesh.TriMesh)

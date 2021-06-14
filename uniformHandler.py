@@ -9,7 +9,7 @@ def setLightUniforms(pipeline, lights):
         light3 = lights[2]
         
         glUseProgram(pipeline.shaderProgram)
-        glUniform3f(glGetUniformLocation(pipeline.shaderProgram, "La"), 0.65, 0.65, 0.65) # Componente ambiental de cada luz
+        glUniform3f(glGetUniformLocation(pipeline.shaderProgram, "La"), 0.25, 0.25, 0.25) # Componente ambiental de cada luz
 
         glUniformMatrix3fv(glGetUniformLocation(pipeline.shaderProgram, "Ld"), 1, GL_TRUE, \
         np.array([light1.Ld, light2.Ld, light3.Ld]).T) # Componente difusa de cada luz

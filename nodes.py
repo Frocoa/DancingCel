@@ -164,11 +164,72 @@ def createScene(pipeline, tex_pipeline):
 
     # Se crean las shapes en GPU
     gpuGrayCube = createGPUShape(pipeline, bs.createColorNormalsCube(1.0,0.7,0.7)) # Shape del cubo gris
-    
-    # Arbol 3D
-    arbol3D = create3dPlane(tex_pipeline, "arbol", "tree")
-    arbol3D.setScale([1.0, 1.0, 1.3])
-    arbol3D.setPosition([-6.0, 3.0, -1.0])
+    terrainMesh = mh.terrenoMesh(20)
+    moonShape = createGPUShape(pipeline, createMoon())
+
+    gShyGuy = create3dPlane(tex_pipeline, "shyverde", "greenShyGuy")
+    gShyGuy.setPosition([-5.5, -5.0, -2.1])
+
+    bShyGuy = create3dPlane(tex_pipeline, "shyazul", "blueShyGuy")
+    bShyGuy.setPosition([-5.1, -6.0, -2.1])
+
+    chomp = create3dPlane(tex_pipeline, "chomp", "chomp")
+    chomp.setScale([1.5,1,1])
+    chomp.setPosition([3.5, 4.5, -2.1])
+    chomp.Ka = (0.7, 0.7, 0.7)
+    chomp.Ks = (0.9, 0.9, 0.9) # Es bien metalico
+
+    publico = GameObject("publico", pipeline)
+    publico.addChilds([ gShyGuy, bShyGuy, chomp])
+
+    nube_material = [(0.8, 0.8, 0.8), (0.0, 0.0, 0.0), (0.0, 0.0, 0.0)] # Se quiere dar la impresion de que estan lejos asi que no seran afectadas por la luz
+    # Nube
+    nube1 = create3dPlane(tex_pipeline, "nube1", "cloud")
+    nube1.setPosition([-5.1, 6, 3])
+    nube1.Ka = nube_material[0]
+    nube1.Kd = nube_material[1]
+    nube1.Ks = nube_material[2]
+
+    nube2 = create3dPlane(tex_pipeline, "nube2", "cloud")
+    nube2.setPosition([-5.1, -6, 3])
+    nube2.Ka = nube_material[0]
+    nube2.Kd = nube_material[1]
+    nube2.Ks = nube_material[2]
+
+    # Arboles 3D
+    arbol1 = create3dPlane(tex_pipeline, "arbol1", "tree")
+    arbol1.setScale([1.0, 1.0, 1.3])
+    arbol1.uniformScale(3)
+    arbol1.setPosition([-5.5, 5.0, -1.0])
+
+    arbol2 = create3dPlane(tex_pipeline, "arbol2", "tree")
+    arbol2.setScale([1.0, 1.0, 1.3])
+    arbol2.uniformScale(3)
+    arbol2.setPosition([-6.0, 4.0, -1.0])
+
+    arbol3 = create3dPlane(tex_pipeline, "arbol3", "tree2")
+    arbol3.setScale([1.0, 1.0, 1.3])
+    arbol3.uniformScale(3)
+    arbol3.setPosition([5.5, 5.0, -1.0])
+
+    arbol4 = create3dPlane(tex_pipeline, "arbol4", "tree2")
+    arbol4.setScale([1.0, 1.0, 1.3])
+    arbol4.uniformScale(3)
+    arbol4.setPosition([6.0, 4.0, -1.0])
+
+    arbol5 = create3dPlane(tex_pipeline, "arbol5", "tree")
+    arbol5.setScale([1.0, 1.0, 1.3])
+    arbol5.uniformScale(3)
+    arbol5.setPosition([5.2, -4.3, -1.0])
+
+    arboles = GameObject("arboles", pipeline)
+    arboles.addChilds([arbol1, arbol2, arbol3, arbol4, arbol5])
+    # Terreno
+    terreno = GameObject("terreno", pipeline)
+    terreno.setModel(createGPUShape(pipeline, mh.toShape(terrainMesh, color=(40/255, 255/255, 40/255))))
+    terreno.setScale([20, 20, 10])
+    terreno.setPosition([0, 0, -3.5])
+    terreno.Kd = (0.15, 0.15, 0.15) # El pasto se ilumina bastante poco con las luces de colores
 
     # Nodo del cubo gris
     grayCube = GameObject("grayCube", pipeline)
@@ -187,6 +248,6 @@ def createScene(pipeline, tex_pipeline):
 
     # Nodo final de la escena 
     trScene = GameObject("trScene", pipeline)
-    trScene.addChilds([scene, arbol3D])
+    trScene.addChilds([scene, arboles, terreno, nube1, nube2, publico])
 
     return trScene        

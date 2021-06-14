@@ -55,7 +55,7 @@ if __name__ == "__main__":
     celTex = celTexSpotPipeline
 
     # Setting up the clear screen color
-    glClearColor(0.85, 0.85, 0.85, 1.0)
+    glClearColor(0, 42/255, 42/255, 53/255) # color cielo oscuro
 
     # As we work in 3D, we need to check which part is in front,
     # and which one is at the back
@@ -76,15 +76,15 @@ if __name__ == "__main__":
     lights = []
 
     light1Coords = [[0, 0, 0], [0, 0, 2.5], [0, 0, 2.5],    [2, 2, 4],   [2, 0, 4],    [0, 0, 2.5],     [0, 0, 0]]
-    light1Colors = [[0, 0, 0], [0.01, 0, 0], [0.03, 0, 0], [-0.03, 0, 0], [-0.01, 0, 0], [0, 0, 0]]
+    light1Colors = [[0, 0, 0], [0.05, 0, 0], [0.03, 0, 0], [-0.03, 0, 0], [-0.05, 0, 0], [0, 0, 0]]
     light1 = Light(controller, light1Coords, light1Colors)
     lights.append(light1)
     light2Coords = [[0, 0, 0], [0, 0, 2.5], [0, 0, 2.5],[-2 , 2, 4], [-2 , 0, 4],   [0, 0, 2.5], [0, 0, 0]]
-    light2Colors = [[0, 0, 0], [0, 0.01, 0], [0, 0.03, 0], [0, -0.03, 0], [0, -0.01, 0], [0, 0, 0]]
+    light2Colors = [[0, 0, 0], [0, 0.05, 0], [0, 0.03, 0], [0, -0.03, 0], [0, -0.05, 0], [0, 0, 0]]
     light2 = Light(controller, light2Coords, light2Colors)
     lights.append(light2)
     light3Coords = [[0, 0, 0], [0, 0, 2.5], [0, 0, 2.5],[0, -2, 4], [-2, -2, 4], [0, 0, 2.5], [0, 0, 0]]
-    light3Colors = [[0, 0, 0], [0, 0, 0.01], [0, 0, 0.03], [0, 0, -0.03], [0, 0, -0.01], [0, 0, 0]]
+    light3Colors = [[0, 0, 0], [0, 0, 0.05], [0, 0, 0.03], [0, 0, -0.03], [0, 0, -0.05], [0, 0, 0]]
     light3 = Light(controller, light3Coords, light3Colors)
     lights.append(light3)
 
@@ -113,7 +113,7 @@ if __name__ == "__main__":
         glfw.set_window_title(window, title + str(perfMonitor))
 
         # Se cambian las luces entre spot y normales
-        if (controller.is_3_pressed):
+        if (controller.is_3_pressed == True):
             phong = phongSpotPipeline
             phongTex = phongTexSpotPipeline
             cel = celSpotPipeline
