@@ -76,6 +76,7 @@ def createTail(pipeline):
 
     return tail
 
+# crea un plano con textura
 def createPlane(pipeline, nombre, texture_name):
     plane = GameObject(nombre, pipeline)
     path = "assets/" + texture_name +".png"
@@ -83,6 +84,7 @@ def createPlane(pipeline, nombre, texture_name):
 
     return plane
 
+# crea un plano con textura que siempre mira a camara
 def create3dPlane(pipeline, nombre, texture_name):
     plane = Plane3D(nombre, pipeline)
     path =  "assets/" + texture_name +".png"
@@ -90,6 +92,7 @@ def create3dPlane(pipeline, nombre, texture_name):
 
     return plane
 
+# crea a Maru
 def createCharacter(pipeline, tex_pipeline, controller):
     bodyMesh = mh.createBodyMesh()
     legModel = createGPUShape(pipeline, createLegShape())
@@ -163,10 +166,11 @@ def createScene(pipeline, tex_pipeline):
     # Se crea la escena base
 
     # Se crean las shapes en GPU
-    gpuGrayCube = createGPUShape(pipeline, bs.createColorNormalsCube(1.0,0.7,0.7)) # Shape del cubo gris
+    gpuCube = createGPUShape(pipeline, bs.createColorNormalsCube(1.0,0.7,0.7)) # Shape del cubo gris
     terrainMesh = mh.terrenoMesh(20)
     moonShape = createGPUShape(pipeline, createMoon())
 
+    #publico
     gShyGuy = create3dPlane(tex_pipeline, "shyverde", "greenShyGuy")
     gShyGuy.setPosition([-5.5, -5.0, -2.1])
 
@@ -182,8 +186,8 @@ def createScene(pipeline, tex_pipeline):
     publico = GameObject("publico", pipeline)
     publico.addChilds([ gShyGuy, bShyGuy, chomp])
 
+    # Nubes
     nube_material = [(0.8, 0.8, 0.8), (0.0, 0.0, 0.0), (0.0, 0.0, 0.0)] # Se quiere dar la impresion de que estan lejos asi que no seran afectadas por la luz
-    # Nube
     nube1 = create3dPlane(tex_pipeline, "nube1", "cloud")
     nube1.setPosition([-5.1, 6, 3])
     nube1.Ka = nube_material[0]
@@ -224,6 +228,7 @@ def createScene(pipeline, tex_pipeline):
 
     arboles = GameObject("arboles", pipeline)
     arboles.addChilds([arbol1, arbol2, arbol3, arbol4, arbol5])
+
     # Terreno
     terreno = GameObject("terreno", pipeline)
     terreno.setModel(createGPUShape(pipeline, mh.toShape(terrainMesh, color=(40/255, 255/255, 40/255))))
@@ -231,20 +236,20 @@ def createScene(pipeline, tex_pipeline):
     terreno.setPosition([0, 0, -3.5])
     terreno.Kd = (0.15, 0.15, 0.15) # El pasto se ilumina bastante poco con las luces de colores
 
-    # Nodo del cubo gris
-    grayCube = GameObject("grayCube", pipeline)
-    grayCube.setModel(gpuGrayCube)
+    # Nodo del cubo
+    cube = GameObject("Cube", pipeline)
+    cube.setModel(gpuCube)
 
-    # Nodo del suelo de color gris
-    floor = GameObject("floor", pipeline)
-    floor.setPosition([0, 0, -1])
-    floor.addChilds([grayCube])
+    # Nodo del escenario
+    escenario = GameObject("escenario", pipeline)
+    escenario.setPosition([0, 0, -1])
+    escenario.addChilds([cube])
 
     # Nodo de la escena para realizar un escalamiento
     scene = GameObject("scene", pipeline)
     scene.setPosition([0, 0, -1.5])
     scene.setScale([5,5,1])
-    scene.addChilds([floor])
+    scene.addChilds([escenario])
 
     # Nodo final de la escena 
     trScene = GameObject("trScene", pipeline)

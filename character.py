@@ -7,11 +7,11 @@ class Character(GameObject):
 	def __init__(self, pipeline, childs, controller):
 		super(Character, self).__init__("Maru", pipeline)
 
-		self.index = 0
-		self.slowCount = 0
-		self.N = 1200
-		self.childs = childs
-		self.controller = controller
+		self.index = 0 # indice para las curvas
+		self.slowCount = 0 # control del efecto de slow motion
+		self.N = 1200 # Cantidad de puntos en las curvas
+		self.childs = childs # hijos del objeto
+		self.controller = controller # controlador
 
 		# Se recuperan las partes del arbol que se quieran mover
 		self.joint1 = findGameObject("joint1", self)
@@ -36,7 +36,8 @@ class Character(GameObject):
 
 	def update(self, delta, camera, lights):
 		
-		if self.controller.slow == False or self.slowCount == 25:
+		# no se actualiza si hay efecto slow motion y no han pasado los frames necesarios
+		if self.controller.slow == False or self.slowCount == 25: 
 			joint_1_rot = self.tailCurve[math.floor(self.index*10) % self.N][1]
 			joint_2_rot = self.tailCurve[math.floor(self.index*10 + self.N/3) % self.N][1]
 			joint_3_rot = self.tailCurve[math.floor(self.index*10 + (2 * self.N)/3) % self.N][1]

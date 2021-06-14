@@ -14,7 +14,7 @@ class GameObject:
 		self.rotation = [0, 0, 0] # rotacion en grados
 		self.scale = [1, 1, 1] # tamaño del objeto
 		self.childs = [] # gameobjects
-		self.time = 0
+		self.time = 0 # tiempo
 
 		self.pipeline = pipeline # pipeline con la cual se dibuja
 		self.drawType = "triangles" # metodo de dibujo 

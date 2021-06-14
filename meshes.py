@@ -7,6 +7,7 @@ def createTailMesh(textured=False):
 
 	mesh = openmesh.TriMesh()
 
+	# abajo
 	d1 = mesh.add_vertex(np.array([  0.5,   0.0,  -1.0]))
 	d2 = mesh.add_vertex(np.array([ 0.25, -0.433, -1.0]))
 	d3 = mesh.add_vertex(np.array([-0.25, -0.433, -1.0]))
@@ -14,6 +15,7 @@ def createTailMesh(textured=False):
 	d5 = mesh.add_vertex(np.array([-0.25,  0.433, -1.0]))
 	d6 = mesh.add_vertex(np.array([ 0.25,  0.433, -1.0])) 
 
+	# arriba
 	u1 = mesh.add_vertex(np.array([  0.3,   0.0,  0.0]))
 	u2 = mesh.add_vertex(np.array([ 0.15, -0.259, 0.0]))
 	u3 = mesh.add_vertex(np.array([-0.15, -0.259, 0.0]))
@@ -58,6 +60,7 @@ def createBodyMesh(textured=False):
 
 	mesh = openmesh.TriMesh()
 
+	# abajo
 	d1 = mesh.add_vertex(np.array([  0.3,   0.0,  -0.28]))
 	d2 = mesh.add_vertex(np.array([ 0.15, -0.259, -0.28]))
 	d3 = mesh.add_vertex(np.array([-0.15, -0.259, -0.28]))
@@ -65,6 +68,7 @@ def createBodyMesh(textured=False):
 	d5 = mesh.add_vertex(np.array([-0.15,  0.259, -0.28]))
 	d6 = mesh.add_vertex(np.array([ 0.15,  0.259, -0.28])) 
 
+	# centro
 	c1 = mesh.add_vertex(np.array([  0.5,   0.0,  0.0]))
 	c2 = mesh.add_vertex(np.array([ 0.25, -0.433, 0.0]))
 	c3 = mesh.add_vertex(np.array([-0.25, -0.433, 0.0]))
@@ -72,6 +76,7 @@ def createBodyMesh(textured=False):
 	c5 = mesh.add_vertex(np.array([-0.25,  0.433, 0.0]))
 	c6 = mesh.add_vertex(np.array([ 0.25,  0.433, 0.0])) 
 
+	# arriba
 	u1 = mesh.add_vertex(np.array([  0.3,   0.0,  0.28]))
 	u2 = mesh.add_vertex(np.array([ 0.15, -0.259, 0.28]))
 	u3 = mesh.add_vertex(np.array([-0.15, -0.259, 0.28]))
@@ -122,6 +127,7 @@ def createBodyMesh(textured=False):
 
 	return mesh
 
+# funcion que modela el terreno
 def terreno(x, y):
 	return math.sin(10*(x**2 + y ** 2))/10
 
@@ -160,10 +166,9 @@ def terrenoMesh(N):
             ine = index(i+1,j+1)
             inw = index(i,j+1)
 
+            # añadimos las caras
             mesh.add_face(vertexs[isw], vertexs[ise], vertexs[ine])
             mesh.add_face(vertexs[ine], vertexs[inw], vertexs[isw])
-
-        
 
     return mesh
 

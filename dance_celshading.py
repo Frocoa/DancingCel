@@ -62,6 +62,7 @@ if __name__ == "__main__":
     glEnable(GL_DEPTH_TEST)
     glLineWidth(10)
 
+    # Se instancia la camara
     camera = Camera(controller)
     camera.setProjection(tr.perspective(60, float(width) / float(height), 0.1, 100))
 

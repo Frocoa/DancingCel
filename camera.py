@@ -58,9 +58,6 @@ class Camera:
             self.up
         )
 
-        # Se actualiza hacia donde mira
-        #self.setAt(self.objective.position)
-
         self.viewMatrix = viewMatrix
 
     #Funcion que recibe el input para manejar la camara y controlar sus coordenadas
